@@ -14,9 +14,9 @@ export function SignupForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    signup(email, password, name);
+    await signup(email, password, name);
     router.push("/dashboard");
   };
 
