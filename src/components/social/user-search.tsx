@@ -1,14 +1,15 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { MOCK_CLASSES } from "@/data/mock";
 import { Search } from "lucide-react";
+import type { Class } from "@/types/class";
 
 export interface UserSearchProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
   selectedClassIds: string[];
   onClassFilterChange: (ids: string[]) => void;
+  classes: Class[];
 }
 
 export function UserSearch({
@@ -16,6 +17,7 @@ export function UserSearch({
   onSearchChange,
   selectedClassIds,
   onClassFilterChange,
+  classes,
 }: UserSearchProps) {
   const toggleClass = (classId: string) => {
     if (selectedClassIds.includes(classId)) {
@@ -40,7 +42,7 @@ export function UserSearch({
         <span className="text-sm text-gray-600 dark:text-gray-400">
           Filter by class:
         </span>
-        {MOCK_CLASSES.map((cls) => (
+        {classes.map((cls) => (
           <button
             key={cls.id}
             type="button"

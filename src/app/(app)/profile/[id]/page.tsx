@@ -1,18 +1,39 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ProfileHeader } from "@/components/profile/profile-header";
 import { MyClassesSection } from "@/components/profile/my-classes-section";
 import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
-import { MOCK_USERS, MOCK_CLASSES } from "@/data/mock";
+import { getUser } from "@/lib/api";
+import { useClasses } from "@/hooks/use-classes";
+import type { User } from "@/types/user";
 
 export default function ProfileByIdPage() {
   const params = useParams();
   const id = params.id as string;
+  const [user, setUser] = useState<User | null | undefined>(undefined);
+  const { classes: allClasses } = useClasses();
 
-  const user = MOCK_USERS.find((u) => u.id === id);
+  useEffect(() => {
+    getUser(id).then(setUser).catch(() => setUser(null));
+  }, [id]);
+
+  const classes = user
+    ? user.classIds
+        .map((cid) => allClasses.find((c) => c.id === cid))
+        .filter((c): c is (typeof allClasses)[number] => c != null)
+    : [];
+
+  if (user === undefined) {
+    return (
+      <div className="container max-w-2xl space-y-8 p-8">
+        <p className="text-gray-500">Loading...</p>
+      </div>
+    );
+  }
 
   if (!user) {
     return (
@@ -27,10 +48,6 @@ export default function ProfileByIdPage() {
       </div>
     );
   }
-
-  const classes = user.classIds
-    .map((cid) => MOCK_CLASSES.find((c) => c.id === cid))
-    .filter(Boolean) as typeof MOCK_CLASSES;
 
   return (
     <div className="container max-w-2xl space-y-8 p-8">

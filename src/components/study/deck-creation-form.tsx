@@ -16,17 +16,16 @@ export function DeckCreationForm() {
     { id: "card-1", front: "", back: "" },
   ]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validCards = cards.filter((c) => c.front.trim() && c.back.trim());
     if (!title.trim() || validCards.length === 0) return;
 
-    const deck: Deck = {
-      id: `deck-${Date.now()}`,
+    const deck: Omit<Deck, "id"> = {
       title: title.trim(),
       cards: validCards,
     };
-    addDeck(deck);
+    await addDeck(deck);
     router.push("/study");
   };
 

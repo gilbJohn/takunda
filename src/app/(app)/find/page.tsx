@@ -3,19 +3,20 @@
 import { useState } from "react";
 import { useAuthStore } from "@/stores/auth-store";
 import { useUserSearch } from "@/hooks/use-user-search";
+import { useClasses } from "@/hooks/use-classes";
 import { UserSearch } from "@/components/social/user-search";
 import { ProfileCard } from "@/components/profile/profile-card";
 import { PageHeader } from "@/components/shared/page-header";
 import { EmptyState } from "@/components/shared/empty-state";
-import { MOCK_CLASSES } from "@/data/mock";
 import { Users } from "lucide-react";
 
 export default function FindPage() {
   const user = useAuthStore((s) => s.user);
+  const { classes } = useClasses();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedClassIds, setSelectedClassIds] = useState<string[]>([]);
 
-  const results = useUserSearch({
+  const { results, isLoading } = useUserSearch({
     currentUserId: user?.id,
     searchQuery,
     classIds: selectedClassIds,
@@ -32,8 +33,11 @@ export default function FindPage() {
         onSearchChange={setSearchQuery}
         selectedClassIds={selectedClassIds}
         onClassFilterChange={setSelectedClassIds}
+        classes={classes}
       />
-      {results.length === 0 ? (
+      {isLoading ? (
+        <p className="text-center text-sm text-gray-500">Searching...</p>
+      ) : results.length === 0 ? (
         <EmptyState
           icon={<Users className="h-6 w-6" />}
           title="No results found"
@@ -46,8 +50,8 @@ export default function FindPage() {
               key={u.id}
               user={u}
               classes={u.classIds
-                .map((id) => MOCK_CLASSES.find((c) => c.id === id))
-                .filter(Boolean) as typeof MOCK_CLASSES}
+                .map((id) => classes.find((c) => c.id === id))
+                .filter((c): c is import("@/types/class").Class => c != null)}
             />
           ))}
         </div>
