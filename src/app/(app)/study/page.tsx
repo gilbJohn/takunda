@@ -6,7 +6,7 @@ import { DeckCard } from "@/components/study/deck-card";
 import { PageHeader } from "@/components/shared/page-header";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
-import { BookOpen, HelpCircle } from "lucide-react";
+import { BookOpen, HelpCircle, Compass } from "lucide-react";
 
 export default function StudyPage() {
   const decks = useStudyStore((s) => s.decks);
@@ -18,19 +18,32 @@ export default function StudyPage() {
           title="Study"
           description="Your flashcard decks"
         />
-        <Link href="/study/create">
-          <Button>Create deck</Button>
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/study/explore">
+            <Button variant="outline">
+              <Compass className="mr-2 h-4 w-4" />
+              Explore decks
+            </Button>
+          </Link>
+          <Link href="/study/create">
+            <Button>Create deck</Button>
+          </Link>
+        </div>
       </div>
       {decks.length === 0 ? (
         <EmptyState
           icon={<BookOpen className="h-6 w-6" />}
           title="No decks yet"
-          description="Create your first flashcard deck to get started."
+          description="Create your first flashcard deck, or explore decks made by other students."
           action={
-            <Link href="/study/create">
-              <Button>Create deck</Button>
-            </Link>
+            <div className="flex flex-wrap gap-2">
+              <Link href="/study/explore">
+                <Button variant="outline">Explore decks</Button>
+              </Link>
+              <Link href="/study/create">
+                <Button>Create deck</Button>
+              </Link>
+            </div>
           }
         />
       ) : (
@@ -46,14 +59,28 @@ export default function StudyPage() {
               Quizzes
             </h2>
             <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-              Quizzes from your decks — coming soon. You&apos;ll be able to test yourself with multiple-choice and written questions generated from your flashcards.
+              Test yourself with multiple-choice quizzes. Easy mode has 2 choices per question, hard mode has 4. Decks need at least 4 cards to quiz.
             </p>
             <div className="flex flex-wrap gap-2">
-              {decks.map((deck) => (
-                <Button key={deck.id} variant="outline" size="sm" disabled>
-                  Quiz: {deck.title}
-                </Button>
-              ))}
+              {decks.map((deck) => {
+                const canQuiz = deck.cards.length >= 4;
+                const btn = (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={!canQuiz}
+                  >
+                    Quiz: {deck.title}
+                  </Button>
+                );
+                return canQuiz ? (
+                  <Link key={deck.id} href={`/study/${deck.id}/quiz`}>
+                    {btn}
+                  </Link>
+                ) : (
+                  <span key={deck.id}>{btn}</span>
+                );
+              })}
             </div>
           </section>
         </>

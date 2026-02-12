@@ -1,8 +1,11 @@
 import { API_CONFIG } from "@/lib/config/api";
 import { supabase } from "@/lib/supabase/client";
 import { getClasses } from "./classes";
+import { getUser } from "./users";
 import type { StudyGroup, StudyGroupSession } from "@/types/study-group";
+import type { StudyGroupUserInvite } from "@/types/study-group-invite";
 import type { Class } from "@/types/class";
+import type { User } from "@/types/user";
 import { MOCK_CLASSES } from "@/data/mock";
 
 // Mock state
@@ -237,6 +240,38 @@ export async function ensureStudyGroupsForClasses(
 }
 
 
+export async function getGroupPendingUserInviteIds(groupId: string): Promise<string[]> {
+  if (API_CONFIG.useSupabase) {
+    if (!supabase) return [];
+    const { data } = await supabase
+      .from("study_group_user_invites")
+      .select("recipient_id")
+      .eq("group_id", groupId);
+    return (data ?? []).map((r) => r.recipient_id);
+  }
+  return mockStudyGroupUserInvites.filter((i) => i.group_id === groupId).map((i) => i.recipient_id);
+}
+
+export async function getGroupMemberIds(groupId: string): Promise<string[]> {
+  if (API_CONFIG.useSupabase) {
+    if (!supabase) return [];
+    const { data } = await supabase
+      .from("study_group_members")
+      .select("user_id")
+      .eq("group_id", groupId);
+    return (data ?? []).map((r) => r.user_id);
+  }
+  return mockStudyGroupMembers
+    .filter((m) => m.group_id === groupId)
+    .map((m) => m.user_id);
+}
+
+export async function getGroupMembers(groupId: string): Promise<User[]> {
+  const ids = await getGroupMemberIds(groupId);
+  const users = await Promise.all(ids.map((id) => getUser(id)));
+  return users.filter((u): u is User => u != null);
+}
+
 export async function getStudyGroup(groupId: string): Promise<StudyGroup | null> {
   if (API_CONFIG.useSupabase) {
     if (!supabase) return null;
@@ -425,6 +460,126 @@ export async function createGroupSession(
 }
 
 let mockStudyGroupInvites: Array<{ id: string; group_id: string; email: string; invited_by: string }> = [];
+let mockStudyGroupUserInvites: Array<{
+  id: string;
+  group_id: string;
+  recipient_id: string;
+  invited_by: string;
+  created_at: string;
+}> = [];
+
+export async function inviteFriendToGroup(
+  groupId: string,
+  recipientId: string,
+  invitedById: string
+): Promise<boolean> {
+  if (API_CONFIG.useSupabase) {
+    if (!supabase) return false;
+    const { error } = await supabase.from("study_group_user_invites").insert({
+      group_id: groupId,
+      recipient_id: recipientId,
+      invited_by: invitedById,
+    });
+    if (error) throw new Error(error.message);
+    return true;
+  }
+  if (mockStudyGroupUserInvites.some((i) => i.group_id === groupId && i.recipient_id === recipientId)) return true;
+  mockStudyGroupUserInvites.push({
+    id: `ugi-${Date.now()}-${recipientId}`,
+    group_id: groupId,
+    recipient_id: recipientId,
+    invited_by: invitedById,
+    created_at: new Date().toISOString(),
+  });
+  return true;
+}
+
+export async function getStudyGroupInvitesForUser(userId: string): Promise<StudyGroupUserInvite[]> {
+  if (API_CONFIG.useSupabase) {
+    if (!supabase) return [];
+    const { data: rows } = await supabase
+      .from("study_group_user_invites")
+      .select("id, group_id, recipient_id, invited_by, created_at")
+      .eq("recipient_id", userId);
+    if (!rows?.length) return [];
+    const groupIds = [...new Set(rows.map((r) => r.group_id))];
+    const inviterIds = [...new Set(rows.map((r) => r.invited_by))];
+    const groups = await Promise.all(groupIds.map((id) => getStudyGroup(id)));
+    const groupMap = Object.fromEntries(groups.filter(Boolean).map((g) => [g!.id, g!]));
+    const inviterPromises = inviterIds.map((id) => getUser(id));
+    const inviters = await Promise.all(inviterPromises);
+    const inviterMap = Object.fromEntries(inviterIds.map((id, i) => [id, inviters[i] ?? null]));
+    return rows.map((r) => ({
+      id: r.id,
+      groupId: r.group_id,
+      recipientId: r.recipient_id,
+      invitedById: r.invited_by,
+      createdAt: r.created_at,
+      group: groupMap[r.group_id],
+      inviter: inviterMap[r.invited_by] ?? undefined,
+    }));
+  }
+  const myInvites = mockStudyGroupUserInvites.filter((i) => i.recipient_id === userId);
+  const results: StudyGroupUserInvite[] = [];
+  for (const row of myInvites) {
+    const group = mockStudyGroups.find((g) => g.id === row.group_id);
+    const inviter = await getUser(row.invited_by);
+    results.push({
+      id: row.id,
+      groupId: row.group_id,
+      recipientId: row.recipient_id,
+      invitedById: row.invited_by,
+      createdAt: row.created_at,
+      group: group ? toStudyGroup(group, mockStudyGroupMembers.filter((m) => m.group_id === row.group_id).length, undefined, group.class_id ? MOCK_CLASSES.find((c) => c.id === group.class_id) : undefined) : undefined,
+      inviter: inviter ?? undefined,
+    });
+  }
+  return results;
+}
+
+export async function acceptStudyGroupInvite(inviteId: string, userId: string): Promise<boolean> {
+  if (API_CONFIG.useSupabase) {
+    if (!supabase) return false;
+    const { data: inv } = await supabase
+      .from("study_group_user_invites")
+      .select("group_id, recipient_id")
+      .eq("id", inviteId)
+      .eq("recipient_id", userId)
+      .single();
+    if (!inv) return false;
+    const { error: insErr } = await supabase
+      .from("study_group_members")
+      .insert({ group_id: inv.group_id, user_id: userId });
+    if (insErr) throw new Error(insErr.message);
+    const { error: delErr } = await supabase.from("study_group_user_invites").delete().eq("id", inviteId);
+    if (delErr) throw new Error(delErr.message);
+    return true;
+  }
+  const inv = mockStudyGroupUserInvites.find((i) => i.id === inviteId && i.recipient_id === userId);
+  if (!inv) return false;
+  mockStudyGroupUserInvites = mockStudyGroupUserInvites.filter((i) => i.id !== inviteId);
+  if (!mockStudyGroupMembers.some((m) => m.group_id === inv.group_id && m.user_id === userId)) {
+    mockStudyGroupMembers.push({ group_id: inv.group_id, user_id: userId });
+  }
+  return true;
+}
+
+export async function declineStudyGroupInvite(inviteId: string, userId: string): Promise<boolean> {
+  if (API_CONFIG.useSupabase) {
+    if (!supabase) return false;
+    const { error } = await supabase
+      .from("study_group_user_invites")
+      .delete()
+      .eq("id", inviteId)
+      .eq("recipient_id", userId);
+    if (error) throw new Error(error.message);
+    return true;
+  }
+  const exists = mockStudyGroupUserInvites.some((i) => i.id === inviteId && i.recipient_id === userId);
+  if (!exists) return false;
+  mockStudyGroupUserInvites = mockStudyGroupUserInvites.filter((i) => i.id !== inviteId);
+  return true;
+}
 
 export async function inviteToGroupByEmail(
   groupId: string,

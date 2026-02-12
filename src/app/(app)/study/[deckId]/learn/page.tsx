@@ -1,9 +1,9 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
-import { useStudyStore } from "@/stores/study-store";
+import { useDeck } from "@/hooks/use-deck";
 import { Flashcard } from "@/components/study/flashcard";
 import { FlashcardSwipeNavigation } from "@/components/study/flashcard-swipe-navigation";
 import { Button } from "@/components/ui/button";
@@ -11,12 +11,18 @@ import { PageHeader } from "@/components/shared/page-header";
 
 export default function StudyLearnPage() {
   const params = useParams();
-  const router = useRouter();
   const deckId = params.deckId as string;
-  const getDeck = useStudyStore((s) => s.getDeck);
-
-  const deck = getDeck(deckId);
+  const { deck, loading } = useDeck(deckId);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  if (loading) {
+    return (
+      <div className="container max-w-2xl space-y-8 p-8">
+        <div className="h-8 w-48 animate-pulse rounded bg-gray-200 dark:bg-gray-800" />
+        <div className="h-64 animate-pulse rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50" />
+      </div>
+    );
+  }
 
   if (!deck) {
     return (
@@ -66,9 +72,14 @@ export default function StudyLearnPage() {
           }
         />
       </div>
-      <Link href="/study">
-        <Button variant="outline">Back to decks</Button>
-      </Link>
+      <div className="flex gap-4">
+        <Link href="/study">
+          <Button variant="outline">My decks</Button>
+        </Link>
+        <Link href="/study/explore">
+          <Button variant="ghost">Explore</Button>
+        </Link>
+      </div>
     </div>
   );
 }

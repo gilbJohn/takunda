@@ -8,7 +8,7 @@ import { PageHeader } from "@/components/shared/page-header";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/shared/avatar";
-import { Users, UserPlus, Mail } from "lucide-react";
+import { Users, UserPlus, Mail, Send } from "lucide-react";
 import Link from "next/link";
 import type { Class } from "@/types/class";
 
@@ -18,6 +18,7 @@ export default function FriendsPage() {
   const {
     friends,
     pendingInvites,
+    sentInvites,
     suggestions,
     isLoading,
     sendInvite,
@@ -43,13 +44,19 @@ export default function FriendsPage() {
         <p className="text-center text-sm text-gray-500">Loading...</p>
       ) : (
         <div className="space-y-10">
-          {/* Pending Invites */}
+          {/* Received friend requests */}
           {pendingInvites.length > 0 && (
             <section>
               <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-gray-50">
                 <Mail className="h-5 w-5" />
                 Friend requests
+                <span className="rounded-full bg-gray-200 px-2 py-0.5 text-sm font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                  {pendingInvites.length}
+                </span>
               </h2>
+              <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                People who want to connect with you
+              </p>
               <div className="grid gap-4 sm:grid-cols-2">
                 {pendingInvites.map((inv) => (
                   <div
@@ -86,6 +93,49 @@ export default function FriendsPage() {
                         Decline
                       </Button>
                     </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Sent (pending) friend requests */}
+          {sentInvites.length > 0 && (
+            <section>
+              <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-gray-50">
+                <Send className="h-5 w-5" />
+                Pending requests
+                <span className="rounded-full bg-gray-200 px-2 py-0.5 text-sm font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                  {sentInvites.length}
+                </span>
+              </h2>
+              <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                Requests you sent, awaiting response
+              </p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {sentInvites.map((inv) => (
+                  <div
+                    key={inv.id}
+                    className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950"
+                  >
+                    <div className="flex items-center gap-4">
+                      <Avatar
+                        src={inv.recipient?.avatar}
+                        fallback={inv.recipient?.name}
+                        className="h-12 w-12"
+                      />
+                      <div>
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-50">
+                          {inv.recipient?.name}
+                        </h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          {inv.recipient?.email}
+                        </p>
+                      </div>
+                    </div>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                      Pending
+                    </span>
                   </div>
                 ))}
               </div>
