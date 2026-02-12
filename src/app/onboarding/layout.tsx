@@ -2,12 +2,9 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { AppShell } from "@/components/layout/app-shell";
 import { useAuthStore } from "@/stores/auth-store";
-import { useStudyStore } from "@/stores/study-store";
-import { isApiEnabled } from "@/lib/config/api";
 
-export default function AppLayout({
+export default function OnboardingLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -15,27 +12,24 @@ export default function AppLayout({
   const router = useRouter();
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
   const onboardingCompleted = useAuthStore((s) => s.user?.onboardingCompleted);
-  const loadDecks = useStudyStore((s) => s.loadDecks);
 
   useEffect(() => {
     if (!isLoggedIn) {
       router.replace("/login");
       return;
     }
-    if (!onboardingCompleted) {
-      router.replace("/onboarding");
+    if (onboardingCompleted) {
+      router.replace("/dashboard");
     }
   }, [isLoggedIn, onboardingCompleted, router]);
 
-  useEffect(() => {
-    if (isLoggedIn && isApiEnabled()) {
-      loadDecks();
-    }
-  }, [isLoggedIn, loadDecks]);
-
-  if (!isLoggedIn) {
+  if (!isLoggedIn || onboardingCompleted) {
     return null;
   }
 
-  return <AppShell>{children}</AppShell>;
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 py-12 dark:bg-gray-950">
+      <div className="w-full max-w-lg">{children}</div>
+    </div>
+  );
 }

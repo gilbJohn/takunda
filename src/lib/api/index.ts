@@ -7,8 +7,8 @@
 export { login, signup, logout } from "./auth";
 export type { LoginResult, SignupInput } from "./auth";
 
-export { getUsers, getUser, searchUsers } from "./users";
-export type { SearchUsersParams } from "./users";
+export { getUsers, getUser, searchUsers, updateProfile } from "./users";
+export type { SearchUsersParams, UpdateProfileInput } from "./users";
 
 export { getClasses } from "./classes";
 

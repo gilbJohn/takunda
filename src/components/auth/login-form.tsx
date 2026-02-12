@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/stores/auth-store";
+import { API_CONFIG } from "@/lib/config/api";
 
 export function LoginForm() {
   const router = useRouter();
@@ -17,10 +18,19 @@ export function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    if (await login(email, password)) {
-      router.push("/dashboard");
-    } else {
-      setError("Invalid email or password. Try: alex@example.com / password");
+    try {
+      if (await login(email, password)) {
+        const completed = useAuthStore.getState().user?.onboardingCompleted;
+        router.push(completed ? "/dashboard" : "/onboarding");
+      } else {
+        setError(
+          API_CONFIG.useSupabase
+            ? "Invalid email or password. Don't have an account? Sign up first."
+            : "Invalid email or password. Try: alex@example.com / password"
+        );
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Login failed");
     }
   };
 
@@ -38,7 +48,7 @@ export function LoginForm() {
             htmlFor="email"
             className="text-sm font-medium text-gray-700 dark:text-gray-300"
           >
-            Email
+            Email (not username)
           </label>
           <Input
             id="email"
