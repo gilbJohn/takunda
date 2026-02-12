@@ -17,7 +17,7 @@ export function SignupForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await signup(email, password, name);
-    router.push("/dashboard");
+    router.push("/onboarding");
   };
 
   return (

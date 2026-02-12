@@ -9,12 +9,13 @@ import { useAuthStore } from "@/stores/auth-store";
 export default function LoginPage() {
   const router = useRouter();
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
+  const onboardingCompleted = useAuthStore((s) => s.user?.onboardingCompleted);
 
   useEffect(() => {
     if (isLoggedIn) {
-      router.replace("/dashboard");
+      router.replace(onboardingCompleted ? "/dashboard" : "/onboarding");
     }
-  }, [isLoggedIn, router]);
+  }, [isLoggedIn, onboardingCompleted, router]);
 
   return (
     <div className="space-y-8">

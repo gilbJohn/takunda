@@ -16,17 +16,35 @@ export function DeckCreationForm() {
     { id: "card-1", front: "", back: "" },
   ]);
 
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     const validCards = cards.filter((c) => c.front.trim() && c.back.trim());
-    if (!title.trim() || validCards.length === 0) return;
+    if (!title.trim()) {
+      setError("Please enter a deck title.");
+      return;
+    }
+    if (validCards.length === 0) {
+      setError("Please add at least one card with both front and back filled.");
+      return;
+    }
 
-    const deck: Omit<Deck, "id"> = {
-      title: title.trim(),
-      cards: validCards,
-    };
-    await addDeck(deck);
-    router.push("/study");
+    setIsSubmitting(true);
+    try {
+      const deck: Omit<Deck, "id"> = {
+        title: title.trim(),
+        cards: validCards,
+      };
+      await addDeck(deck);
+      router.push("/study");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create deck");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -47,8 +65,13 @@ export function DeckCreationForm() {
         />
       </div>
       <CardEditor cards={cards} onChange={setCards} />
+      {error && (
+        <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+      )}
       <div className="flex gap-4">
-        <Button type="submit">Create deck</Button>
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Creating…" : "Create deck"}
+        </Button>
         <Button
           type="button"
           variant="outline"

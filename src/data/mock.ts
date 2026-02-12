@@ -17,6 +17,7 @@ export const MOCK_USERS: User[] = [
     classIds: ["class-1", "class-2"],
     school: "State University",
     major: "Computer Science",
+    onboardingCompleted: true,
   },
   {
     id: "user-2",
@@ -25,6 +26,7 @@ export const MOCK_USERS: User[] = [
     classIds: ["class-1", "class-3"],
     school: "State University",
     major: "Biology",
+    onboardingCompleted: true,
   },
   {
     id: "user-3",
@@ -33,6 +35,7 @@ export const MOCK_USERS: User[] = [
     classIds: ["class-2", "class-4"],
     school: "State University",
     major: "Mathematics",
+    onboardingCompleted: true,
   },
 ];
 
