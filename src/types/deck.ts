@@ -9,4 +9,6 @@ export interface Deck {
   title: string;
   cards: Card[];
   createdAt?: string;
+  /** Creator's display name (for explored decks) */
+  creatorName?: string;
 }

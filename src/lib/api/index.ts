@@ -31,11 +31,18 @@ export {
   joinStudyGroup,
   ensureStudyGroupsForClasses,
   getStudyGroup,
+  getGroupMemberIds,
+  getGroupMembers,
+  getGroupPendingUserInviteIds,
   getOrCreateClassJoinToken,
   joinClassByToken,
   getUpcomingSessions,
   createGroupSession,
   inviteToGroupByEmail,
+  inviteFriendToGroup,
+  getStudyGroupInvitesForUser,
+  acceptStudyGroupInvite,
+  declineStudyGroupInvite,
 } from "./study-groups";
 
-export { getDecks, getDeck, createDeck } from "./decks";
+export { getDecks, getDeck, getExploreDecks, createDeck } from "./decks";
