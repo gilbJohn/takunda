@@ -239,7 +239,7 @@ async function getFriendSuggestionsMock(userId: string): Promise<User[]> {
     ...mockFriendInvites.filter((i) => i.sender_id === userId).map((i) => i.recipient_id),
     ...mockFriendInvites.filter((i) => i.recipient_id === userId).map((i) => i.sender_id),
   ]);
-  const exclude = new Set([...friendIds, ...invitedIds, userId]);
+  const exclude = new Set([...Array.from(friendIds), ...Array.from(invitedIds), userId]);
   const classmates = MOCK_USERS.filter((u) => {
     if (exclude.has(u.id)) return false;
     return user.classIds.some((cid) => u.classIds.includes(cid));
@@ -272,7 +272,7 @@ async function getFriendSuggestionsSupabase(userId: string): Promise<User[]> {
     ...(recvInvites ?? []).map((i) => i.sender_id),
   ]);
 
-  const exclude = new Set([...friendIds, ...invitedIds, userId]);
+  const exclude = new Set([...Array.from(friendIds), ...Array.from(invitedIds), userId]);
   return usersWithClasses.filter((u) => {
     if (exclude.has(u.id)) return false;
     return u.classIds.some((cid) => myClassIds.includes(cid));

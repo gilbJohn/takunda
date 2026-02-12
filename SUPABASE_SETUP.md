@@ -5,9 +5,12 @@
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+GEMINI_API_KEY=your-gemini-api-key
 ```
 
 Or use `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY` if that's what your Supabase project uses.
+
+**Document import:** `GEMINI_API_KEY` is required for the "Import from document" feature on the Create deck page (PDF, DOCX, PPTX). Get a key at [Google AI Studio](https://aistudio.google.com/apikey).
 
 ## 2. Enable Email Auth in Supabase
 

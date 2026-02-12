@@ -152,7 +152,7 @@ export async function createDeck(
   if (API_CONFIG.useMock) {
     const newDeck: Deck = {
       ...deck,
-      id: deck.id ?? `deck-${Date.now()}`,
+      id: ("id" in deck && deck.id) ? deck.id : `deck-${Date.now()}`,
     };
     return createDeckMock(newDeck);
   }

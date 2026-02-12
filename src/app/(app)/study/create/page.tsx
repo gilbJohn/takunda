@@ -6,7 +6,7 @@ export default function StudyCreatePage() {
     <div className="container max-w-2xl space-y-8 p-8">
       <PageHeader
         title="Create deck"
-        description="Add a new flashcard deck"
+        description="Add a new flashcard deck or import from a PDF, DOCX, or PPTX"
       />
       <DeckCreationForm />
     </div>

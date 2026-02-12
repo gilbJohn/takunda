@@ -371,7 +371,7 @@ export async function getUpcomingSessions(userId: string): Promise<Array<StudyGr
     const { data: groups } = await supabase
       .from("study_groups")
       .select("id, name")
-      .in("id", [...new Set(sessions.map((s) => s.group_id))]);
+      .in("id", Array.from(new Set(sessions.map((s) => s.group_id))));
     const nameByGroup = (groups ?? []).reduce<Record<string, string>>((acc, g) => {
       acc[g.id] = g.name;
       return acc;
