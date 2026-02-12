@@ -58,6 +58,69 @@ CREATE TABLE IF NOT EXISTS public.cards (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Friendships: bidirectional relationship (one row per pair)
+CREATE TABLE IF NOT EXISTS public.friendships (
+  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  friend_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (user_id, friend_id),
+  CHECK (user_id < friend_id)
+);
+
+-- Friend invites: from sender to recipient
+CREATE TABLE IF NOT EXISTS public.friend_invites (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  sender_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  recipient_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(sender_id, recipient_id)
+);
+
+-- Study groups: class_id NULL = general group (homework buddies)
+CREATE TABLE IF NOT EXISTS public.study_groups (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  class_id UUID REFERENCES public.classes(id) ON DELETE SET NULL,
+  created_by UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Study group members: many-to-many
+CREATE TABLE IF NOT EXISTS public.study_group_members (
+  group_id UUID NOT NULL REFERENCES public.study_groups(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  role TEXT DEFAULT 'member',
+  joined_at TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (group_id, user_id)
+);
+
+-- Scheduled sessions: for calendar
+CREATE TABLE IF NOT EXISTS public.study_group_sessions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  group_id UUID NOT NULL REFERENCES public.study_groups(id) ON DELETE CASCADE,
+  scheduled_at TIMESTAMPTZ NOT NULL,
+  location TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Class join tokens: for shareable link + QR
+CREATE TABLE IF NOT EXISTS public.class_join_tokens (
+  class_id UUID NOT NULL REFERENCES public.classes(id) ON DELETE CASCADE,
+  token TEXT NOT NULL UNIQUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (class_id)
+);
+
+-- Study group invites by email (MVP: store only)
+CREATE TABLE IF NOT EXISTS public.study_group_invites (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  group_id UUID NOT NULL REFERENCES public.study_groups(id) ON DELETE CASCADE,
+  email TEXT NOT NULL,
+  invited_by UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(group_id, email)
+);
+
 -- ============================================================
 -- Step 3: Create profile on signup (trigger)
 -- ============================================================
@@ -89,6 +152,13 @@ GRANT ALL ON public.classes TO authenticated;
 GRANT ALL ON public.user_classes TO authenticated;
 GRANT ALL ON public.decks TO authenticated;
 GRANT ALL ON public.cards TO authenticated;
+GRANT ALL ON public.friendships TO authenticated;
+GRANT ALL ON public.friend_invites TO authenticated;
+GRANT ALL ON public.study_groups TO authenticated;
+GRANT ALL ON public.study_group_members TO authenticated;
+GRANT ALL ON public.study_group_sessions TO authenticated;
+GRANT ALL ON public.class_join_tokens TO authenticated;
+GRANT ALL ON public.study_group_invites TO authenticated;
 
 -- ============================================================
 -- Step 4: Enable Row Level Security (RLS)
@@ -133,6 +203,122 @@ CREATE POLICY "Users can delete own user_classes" ON public.user_classes
   FOR DELETE USING (auth.uid() = user_id);
 
 -- Decks & cards: RLS disabled for hackathon; policies skipped
+
+-- Friendships: users can see own friendships
+ALTER TABLE public.friendships ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can view own friendships" ON public.friendships;
+CREATE POLICY "Users can view own friendships" ON public.friendships
+  FOR SELECT USING (auth.uid() = user_id OR auth.uid() = friend_id);
+DROP POLICY IF EXISTS "Users can insert friendship" ON public.friendships;
+CREATE POLICY "Users can insert friendship" ON public.friendships
+  FOR INSERT WITH CHECK (auth.uid() = user_id OR auth.uid() = friend_id);
+DROP POLICY IF EXISTS "Users can delete own friendship" ON public.friendships;
+CREATE POLICY "Users can delete own friendship" ON public.friendships
+  FOR DELETE USING (auth.uid() = user_id OR auth.uid() = friend_id);
+
+-- Friend invites: sender and recipient can view
+ALTER TABLE public.friend_invites ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can view own invites" ON public.friend_invites;
+CREATE POLICY "Users can view own invites" ON public.friend_invites
+  FOR SELECT USING (auth.uid() = sender_id OR auth.uid() = recipient_id);
+DROP POLICY IF EXISTS "Users can send invites" ON public.friend_invites;
+CREATE POLICY "Users can send invites" ON public.friend_invites
+  FOR INSERT WITH CHECK (auth.uid() = sender_id);
+DROP POLICY IF EXISTS "Recipient can delete invite" ON public.friend_invites;
+CREATE POLICY "Recipient can delete invite" ON public.friend_invites
+  FOR DELETE USING (auth.uid() = recipient_id);
+
+-- Study groups: viewable by members and for discovery
+ALTER TABLE public.study_groups ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Study groups viewable by all" ON public.study_groups;
+CREATE POLICY "Study groups viewable by all" ON public.study_groups
+  FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Authenticated can create study groups" ON public.study_groups;
+CREATE POLICY "Authenticated can create study groups" ON public.study_groups
+  FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
+
+-- Study group members
+ALTER TABLE public.study_group_members ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Members viewable by all" ON public.study_group_members;
+CREATE POLICY "Members viewable by all" ON public.study_group_members
+  FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Users can join groups" ON public.study_group_members;
+CREATE POLICY "Users can join groups" ON public.study_group_members
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can leave groups" ON public.study_group_members;
+CREATE POLICY "Users can leave groups" ON public.study_group_members
+  FOR DELETE USING (auth.uid() = user_id);
+
+-- Study group sessions
+ALTER TABLE public.study_group_sessions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Sessions viewable by all" ON public.study_group_sessions;
+CREATE POLICY "Sessions viewable by all" ON public.study_group_sessions
+  FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Members can create sessions" ON public.study_group_sessions;
+CREATE POLICY "Members can create sessions" ON public.study_group_sessions
+  FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
+
+-- Class join tokens
+ALTER TABLE public.class_join_tokens ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Tokens viewable by class members" ON public.class_join_tokens;
+CREATE POLICY "Tokens viewable by class members" ON public.class_join_tokens
+  FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Class members can upsert tokens" ON public.class_join_tokens;
+CREATE POLICY "Class members can upsert tokens" ON public.class_join_tokens
+  FOR ALL USING (auth.uid() IS NOT NULL);
+
+-- Study group invites
+ALTER TABLE public.study_group_invites ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Invites viewable by group members" ON public.study_group_invites;
+CREATE POLICY "Invites viewable by group members" ON public.study_group_invites
+  FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Members can invite" ON public.study_group_invites;
+CREATE POLICY "Members can invite" ON public.study_group_invites
+  FOR INSERT WITH CHECK (auth.uid() = invited_by);
+
+-- Classes: allow insert for MVP (users can create classes)
+DROP POLICY IF EXISTS "Classes are viewable by everyone" ON public.classes;
+CREATE POLICY "Classes are viewable by everyone" ON public.classes
+  FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Authenticated can create classes" ON public.classes;
+CREATE POLICY "Authenticated can create classes" ON public.classes
+  FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
+
+-- ============================================================
+-- Step 5c: Auto-join class study group on user_classes insert
+-- ============================================================
+
+CREATE OR REPLACE FUNCTION public.handle_user_class_enrollment()
+RETURNS TRIGGER AS $$
+DECLARE
+  v_group_id UUID;
+  v_class_name TEXT;
+BEGIN
+  -- Get class name for study group
+  SELECT name INTO v_class_name FROM public.classes WHERE id = NEW.class_id;
+
+  -- Find or create study group for this class
+  SELECT id INTO v_group_id FROM public.study_groups WHERE class_id = NEW.class_id LIMIT 1;
+
+  IF v_group_id IS NULL THEN
+    INSERT INTO public.study_groups (name, class_id, created_by)
+    VALUES (COALESCE(v_class_name, 'Study Group'), NEW.class_id, NEW.user_id)
+    RETURNING id INTO v_group_id;
+  END IF;
+
+  -- Add user to study group if not already member
+  INSERT INTO public.study_group_members (group_id, user_id)
+  VALUES (v_group_id, NEW.user_id)
+  ON CONFLICT (group_id, user_id) DO NOTHING;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_user_class_enrollment ON public.user_classes;
+CREATE TRIGGER on_user_class_enrollment
+  AFTER INSERT ON public.user_classes
+  FOR EACH ROW EXECUTE FUNCTION public.handle_user_class_enrollment();
 
 -- ============================================================
 -- Step 5b: Migration - add phone & onboarding_completed (if table exists)

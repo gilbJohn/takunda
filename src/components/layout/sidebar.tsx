@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Users, BookOpen, User, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, BookOpen, User, LogOut, UsersRound, Gamepad2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/shared/avatar";
 import { useAuthStore } from "@/stores/auth-store";
@@ -10,9 +10,11 @@ import { cn } from "@/lib/utils/cn";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/find", label: "Find", icon: Users },
-  { href: "/study", label: "Study", icon: BookOpen },
   { href: "/profile", label: "Profile", icon: User },
+  { href: "/friends", label: "Friends", icon: Users },
+  { href: "/study-groups", label: "Study Groups", icon: UsersRound },
+  { href: "/study", label: "Study", icon: BookOpen },
+  { href: "/games", label: "Games", icon: Gamepad2 },
 ];
 
 export function Sidebar() {

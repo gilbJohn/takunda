@@ -12,16 +12,17 @@ import { profileToUser } from "@/lib/api/supabase-helpers";
  */
 export function AuthSync() {
   useEffect(() => {
-    if (!API_CONFIG.useSupabase || !supabase) return;
+    const client = supabase;
+    if (!API_CONFIG.useSupabase || !client) return;
 
     const syncSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session } } = await client.auth.getSession();
       if (!session?.user) {
         useAuthStore.setState({ user: null, isLoggedIn: false });
         return;
       }
 
-      let { data: profile } = await supabase
+      let { data: profile } = await client
         .from("profiles")
         .select("id, name, email, avatar, phone, school, major, onboarding_completed")
         .eq("id", session.user.id)
@@ -29,7 +30,7 @@ export function AuthSync() {
 
       if (!profile) {
         await new Promise((r) => setTimeout(r, 500));
-        const res = await supabase
+        const res = await client
           .from("profiles")
           .select("id, name, email, avatar, phone, school, major, onboarding_completed")
           .eq("id", session.user.id)
@@ -48,7 +49,7 @@ export function AuthSync() {
         onboarding_completed: false,
       };
 
-      const { data: enrollments } = await supabase
+      const { data: enrollments } = await client
         .from("user_classes")
         .select("class_id")
         .eq("user_id", session.user.id);
@@ -60,7 +61,7 @@ export function AuthSync() {
 
     syncSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    const { data: { subscription } } = client.auth.onAuthStateChange(
       async (event, session) => {
         if (event === "SIGNED_OUT") {
           useAuthStore.setState({ user: null, isLoggedIn: false });

@@ -6,7 +6,7 @@ import { DeckCard } from "@/components/study/deck-card";
 import { PageHeader } from "@/components/shared/page-header";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
-import { BookOpen } from "lucide-react";
+import { BookOpen, HelpCircle } from "lucide-react";
 
 export default function StudyPage() {
   const decks = useStudyStore((s) => s.decks);
@@ -34,11 +34,29 @@ export default function StudyPage() {
           }
         />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
-          {decks.map((deck) => (
-            <DeckCard key={deck.id} deck={deck} />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {decks.map((deck) => (
+              <DeckCard key={deck.id} deck={deck} />
+            ))}
+          </div>
+          <section>
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-gray-50">
+              <HelpCircle className="h-5 w-5" />
+              Quizzes
+            </h2>
+            <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+              Quizzes from your decks — coming soon. You&apos;ll be able to test yourself with multiple-choice and written questions generated from your flashcards.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {decks.map((deck) => (
+                <Button key={deck.id} variant="outline" size="sm" disabled>
+                  Quiz: {deck.title}
+                </Button>
+              ))}
+            </div>
+          </section>
+        </>
       )}
     </div>
   );
