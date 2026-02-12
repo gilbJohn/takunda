@@ -138,6 +138,8 @@ export async function searchUsers(params: SearchUsersParams): Promise<User[]> {
 
 export interface UpdateProfileInput {
   userId: string;
+  name?: string;
+  avatar?: string;
   phone?: string;
   school?: string;
   major?: string;
@@ -155,6 +157,8 @@ async function updateProfileMock(
   if (!existing) return null;
   const updated: User = {
     ...existing,
+    name: input.name ?? existing.name,
+    avatar: input.avatar ?? existing.avatar,
     phone: input.phone ?? existing.phone,
     school: input.school ?? existing.school,
     major: input.major ?? existing.major,
@@ -174,6 +178,8 @@ async function updateProfileSupabase(
   const { error: profileError } = await supabase
     .from("profiles")
     .update({
+      ...(payload.name !== undefined && { name: payload.name || null }),
+      ...(payload.avatar !== undefined && { avatar: payload.avatar || null }),
       ...(payload.phone !== undefined && { phone: payload.phone || null }),
       ...(payload.school !== undefined && { school: payload.school || null }),
       ...(payload.major !== undefined && { major: payload.major || null }),
@@ -202,6 +208,8 @@ async function updateProfileSupabase(
 async function updateProfileApi(input: UpdateProfileInput): Promise<User | null> {
   const { _currentUser, ...payload } = input;
   const res = await apiClient.patch<User>(`/users/${input.userId}`, {
+    name: payload.name,
+    avatar: payload.avatar,
     phone: payload.phone,
     school: payload.school,
     major: payload.major,

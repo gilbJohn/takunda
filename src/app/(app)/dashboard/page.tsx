@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Users, BookOpen, User } from "lucide-react";
+import { Users, BookOpen, User, UsersRound, Gamepad2 } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -22,16 +21,42 @@ export default function DashboardPage() {
         title={`Welcome back, ${user?.name?.split(" ")[0] ?? "there"}!`}
         description="Here are some quick actions to get started."
       />
-      <div className="grid gap-6 md:grid-cols-3">
-        <Link href="/find">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Link href="/profile">
+          <Card className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
+            <CardHeader>
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
+                <User className="h-6 w-6 text-gray-600 dark:text-gray-400" />
+              </div>
+              <CardTitle>Profile</CardTitle>
+              <CardDescription>
+                View and edit your profile and classes
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </Link>
+        <Link href="/friends">
           <Card className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
             <CardHeader>
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
                 <Users className="h-6 w-6 text-gray-600 dark:text-gray-400" />
               </div>
-              <CardTitle>Find classmates</CardTitle>
+              <CardTitle>Friends</CardTitle>
               <CardDescription>
-                Search for students in your classes
+                Connect with friends and classmates
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </Link>
+        <Link href="/study-groups">
+          <Card className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
+            <CardHeader>
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
+                <UsersRound className="h-6 w-6 text-gray-600 dark:text-gray-400" />
+              </div>
+              <CardTitle>Study Groups</CardTitle>
+              <CardDescription>
+                Join or create study groups with classmates
               </CardDescription>
             </CardHeader>
           </Card>
@@ -49,15 +74,15 @@ export default function DashboardPage() {
             </CardHeader>
           </Card>
         </Link>
-        <Link href="/profile">
+        <Link href="/games">
           <Card className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
             <CardHeader>
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
-                <User className="h-6 w-6 text-gray-600 dark:text-gray-400" />
+                <Gamepad2 className="h-6 w-6 text-gray-600 dark:text-gray-400" />
               </div>
-              <CardTitle>Profile</CardTitle>
+              <CardTitle>Games</CardTitle>
               <CardDescription>
-                View and edit your profile
+                Play study games (coming soon)
               </CardDescription>
             </CardHeader>
           </Card>

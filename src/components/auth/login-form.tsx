@@ -21,7 +21,13 @@ export function LoginForm() {
     try {
       if (await login(email, password)) {
         const completed = useAuthStore.getState().user?.onboardingCompleted;
-        router.push(completed ? "/dashboard" : "/onboarding");
+        const redirect = typeof window !== "undefined" ? sessionStorage.getItem("takunda-join-redirect") : null;
+        if (redirect) {
+          if (typeof window !== "undefined") sessionStorage.removeItem("takunda-join-redirect");
+          router.push(redirect);
+        } else {
+          router.push(completed ? "/dashboard" : "/onboarding");
+        }
       } else {
         setError(
           API_CONFIG.useSupabase

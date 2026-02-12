@@ -10,6 +10,32 @@ export type { LoginResult, SignupInput } from "./auth";
 export { getUsers, getUser, searchUsers, updateProfile } from "./users";
 export type { SearchUsersParams, UpdateProfileInput } from "./users";
 
-export { getClasses } from "./classes";
+export {
+  getFriends,
+  getPendingInvites,
+  getSentInvites,
+  sendFriendInvite,
+  acceptFriendInvite,
+  declineFriendInvite,
+  getFriendSuggestions,
+} from "./friends";
+export type { FriendInvite } from "@/types/friend";
+
+export { getClasses, searchClasses, createClass } from "./classes";
+export type { CreateClassInput } from "./classes";
+
+export {
+  getMyGroups,
+  getDiscoverableGroups,
+  createStudyGroup,
+  joinStudyGroup,
+  ensureStudyGroupsForClasses,
+  getStudyGroup,
+  getOrCreateClassJoinToken,
+  joinClassByToken,
+  getUpcomingSessions,
+  createGroupSession,
+  inviteToGroupByEmail,
+} from "./study-groups";
 
 export { getDecks, getDeck, createDeck } from "./decks";
