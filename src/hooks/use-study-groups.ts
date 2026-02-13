@@ -14,7 +14,15 @@ import type { StudyGroup } from "@/types/study-group";
 export function useStudyGroups(userId: string | undefined, userClassIds: string[] = []) {
   const [myGroups, setMyGroups] = useState<StudyGroup[]>([]);
   const [discoverable, setDiscoverable] = useState<StudyGroup[]>([]);
-  const [upcomingSessions, setUpcomingSessions] = useState<Array<{ id: string; groupId: string; scheduledAt: string; location?: string; groupName: string }>>([]);
+  const [upcomingSessions, setUpcomingSessions] = useState<
+    Array<{
+      id: string;
+      groupId: string;
+      scheduledAt: string;
+      location?: string;
+      groupName: string;
+    }>
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const refresh = useCallback(async () => {

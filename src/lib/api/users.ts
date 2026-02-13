@@ -22,12 +22,17 @@ async function getUsersSupabase(): Promise<User[]> {
     .select("id, name, email, avatar, phone, school, major, onboarding_completed");
   if (!profiles) return [];
 
-  const { data: enrollments } = await supabase.from("user_classes").select("user_id, class_id");
-  const classIdsByUser = (enrollments ?? []).reduce<Record<string, string[]>>((acc, e) => {
-    if (!acc[e.user_id]) acc[e.user_id] = [];
-    acc[e.user_id].push(e.class_id);
-    return acc;
-  }, {});
+  const { data: enrollments } = await supabase
+    .from("user_classes")
+    .select("user_id, class_id");
+  const classIdsByUser = (enrollments ?? []).reduce<Record<string, string[]>>(
+    (acc, e) => {
+      if (!acc[e.user_id]) acc[e.user_id] = [];
+      acc[e.user_id].push(e.class_id);
+      return acc;
+    },
+    {}
+  );
 
   return profiles.map((p) => profileToUser(p, classIdsByUser[p.id] ?? []));
 }
@@ -84,8 +89,7 @@ async function searchUsersMock(params: SearchUsersParams): Promise<User[]> {
   if (params.query?.trim()) {
     const q = params.query.toLowerCase();
     filtered = filtered.filter(
-      (u) =>
-        u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
+      (u) => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
     );
   }
 
@@ -105,8 +109,7 @@ async function searchUsersSupabase(params: SearchUsersParams): Promise<User[]> {
   if (params.query?.trim()) {
     const q = params.query.toLowerCase();
     filtered = filtered.filter(
-      (u) =>
-        u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
+      (u) => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
     );
   }
 
@@ -149,9 +152,7 @@ export interface UpdateProfileInput {
   _currentUser?: User;
 }
 
-async function updateProfileMock(
-  input: UpdateProfileInput
-): Promise<User | null> {
+async function updateProfileMock(input: UpdateProfileInput): Promise<User | null> {
   const existing =
     MOCK_USERS.find((u) => u.id === input.userId) ?? input._currentUser ?? null;
   if (!existing) return null;
@@ -168,9 +169,7 @@ async function updateProfileMock(
   return updated;
 }
 
-async function updateProfileSupabase(
-  input: UpdateProfileInput
-): Promise<User | null> {
+async function updateProfileSupabase(input: UpdateProfileInput): Promise<User | null> {
   if (!supabase) return null;
   const userId = input.userId;
 
@@ -195,9 +194,9 @@ async function updateProfileSupabase(
   if (payload.classIds !== undefined) {
     await supabase.from("user_classes").delete().eq("user_id", userId);
     if (payload.classIds.length > 0) {
-      const { error: enrollError } = await supabase.from("user_classes").insert(
-        payload.classIds.map((class_id) => ({ user_id: userId, class_id }))
-      );
+      const { error: enrollError } = await supabase
+        .from("user_classes")
+        .insert(payload.classIds.map((class_id) => ({ user_id: userId, class_id })));
       if (enrollError) throw new Error(enrollError.message);
     }
   }
@@ -219,9 +218,7 @@ async function updateProfileApi(input: UpdateProfileInput): Promise<User | null>
   return res ?? null;
 }
 
-export async function updateProfile(
-  input: UpdateProfileInput
-): Promise<User | null> {
+export async function updateProfile(input: UpdateProfileInput): Promise<User | null> {
   if (API_CONFIG.useSupabase) return updateProfileSupabase(input);
   if (API_CONFIG.useMock) return updateProfileMock(input);
   return updateProfileApi(input);

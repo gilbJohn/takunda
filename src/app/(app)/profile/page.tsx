@@ -10,6 +10,7 @@ import { ProfileEditModal } from "@/components/profile/profile-edit-modal";
 import { MyClassesSection } from "@/components/profile/my-classes-section";
 import { AddClassSection } from "@/components/profile/add-class-section";
 import { PageHeader } from "@/components/shared/page-header";
+import { PageContainer } from "@/components/layout/page-container";
 import { Button } from "@/components/ui/button";
 import { UsersRound } from "lucide-react";
 
@@ -60,9 +61,9 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="container max-w-2xl space-y-8 p-8">
+    <PageContainer maxWidth="md">
       <PageHeader title="Profile" description="Your profile and classes" />
-      <div className="space-y-8 rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-950">
+      <div className="space-y-10 rounded-2xl border border-slate-800 bg-slate-900 p-6 sm:p-8">
         <div className="flex items-start justify-between">
           <ProfileHeader user={user} showEmail showPhone />
           <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
@@ -80,7 +81,7 @@ export default function ProfilePage() {
         <MyClassesSection classes={classes} />
 
         <section>
-          <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-50">
+          <h2 className="mb-4 text-lg font-semibold text-slate-100">
             Add class
           </h2>
           <AddClassSection
@@ -93,7 +94,7 @@ export default function ProfilePage() {
         </section>
 
         <section>
-          <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-50">
+          <h2 className="mb-4 text-lg font-semibold text-slate-100">
             Study groups
           </h2>
           <Link href="/study-groups">
@@ -104,6 +105,6 @@ export default function ProfilePage() {
           </Link>
         </section>
       </div>
-    </div>
+    </PageContainer>
   );
 }

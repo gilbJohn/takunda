@@ -43,9 +43,7 @@ export default function LastOneStandingGamePage() {
   const { deck, loading } = useDeck(deckId);
 
   const externalQuestions: Question[] =
-    deck && deck.cards.length >= MIN_QUESTIONS
-      ? buildQuestionsFromDeck(deck.cards)
-      : [];
+    deck && deck.cards.length >= MIN_QUESTIONS ? buildQuestionsFromDeck(deck.cards) : [];
 
   if (loading) {
     return (

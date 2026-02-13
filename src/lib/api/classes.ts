@@ -36,8 +36,7 @@ export async function searchClasses(query: string): Promise<Class[]> {
   const q = query.toLowerCase().trim();
   return all.filter(
     (c) =>
-      c.name.toLowerCase().includes(q) ||
-      (c.code?.toLowerCase().includes(q) ?? false)
+      c.name.toLowerCase().includes(q) || (c.code?.toLowerCase().includes(q) ?? false)
   );
 }
 

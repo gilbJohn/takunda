@@ -12,10 +12,7 @@ export interface ProfileRow {
   onboarding_completed?: boolean | null;
 }
 
-export function profileToUser(
-  profile: ProfileRow,
-  classIds: string[] = []
-): User {
+export function profileToUser(profile: ProfileRow, classIds: string[] = []): User {
   return {
     id: profile.id,
     name: profile.name,

@@ -24,7 +24,10 @@ async function loginMock(email: string, password: string): Promise<LoginResult |
   return null;
 }
 
-async function loginSupabase(email: string, password: string): Promise<LoginResult | null> {
+async function loginSupabase(
+  email: string,
+  password: string
+): Promise<LoginResult | null> {
   if (!supabase) return null;
   const { data: authData, error } = await supabase.auth.signInWithPassword({
     email,
@@ -52,7 +55,8 @@ async function loginSupabase(email: string, password: string): Promise<LoginResu
 
   const profileData = profile ?? {
     id: authData.user.id,
-    name: authData.user.user_metadata?.name ?? authData.user.email?.split("@")[0] ?? "User",
+    name:
+      authData.user.user_metadata?.name ?? authData.user.email?.split("@")[0] ?? "User",
     email: authData.user.email ?? "",
     avatar: null,
     phone: null,

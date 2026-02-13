@@ -51,11 +51,20 @@ async function getMyGroupsMock(userId: string): Promise<StudyGroup[]> {
     const memberCount = mockStudyGroupMembers.filter((m) => m.group_id === gid).length;
     const nextSessionRow = mockStudyGroupSessions
       .filter((s) => s.group_id === gid && new Date(s.scheduled_at) > new Date())
-      .sort((a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime())[0];
+      .sort(
+        (a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime()
+      )[0];
     const nextSession = nextSessionRow
-      ? { id: nextSessionRow.id, groupId: nextSessionRow.group_id, scheduledAt: nextSessionRow.scheduled_at, location: nextSessionRow.location ?? undefined }
+      ? {
+          id: nextSessionRow.id,
+          groupId: nextSessionRow.group_id,
+          scheduledAt: nextSessionRow.scheduled_at,
+          location: nextSessionRow.location ?? undefined,
+        }
       : undefined;
-    const cls = row.class_id ? MOCK_CLASSES.find((c) => c.id === row.class_id) : undefined;
+    const cls = row.class_id
+      ? MOCK_CLASSES.find((c) => c.id === row.class_id)
+      : undefined;
     groups.push(toStudyGroup(row, memberCount, nextSession, cls));
   }
   return groups;
@@ -92,7 +101,12 @@ async function getMyGroupsSupabase(userId: string): Promise<StudyGroup[]> {
       .limit(1);
     const nextSessionRow = sessionRows?.[0];
     const nextSession = nextSessionRow
-      ? { id: nextSessionRow.id, groupId: nextSessionRow.group_id, scheduledAt: nextSessionRow.scheduled_at, location: nextSessionRow.location ?? undefined }
+      ? {
+          id: nextSessionRow.id,
+          groupId: nextSessionRow.group_id,
+          scheduledAt: nextSessionRow.scheduled_at,
+          location: nextSessionRow.location ?? undefined,
+        }
       : undefined;
     const cls = row.class_id ? allClasses.find((c) => c.id === row.class_id) : undefined;
     result.push(toStudyGroup(row, count ?? 0, nextSession, cls));
@@ -106,13 +120,17 @@ export async function getMyGroups(userId: string): Promise<StudyGroup[]> {
 }
 
 async function getDiscoverableGroupsMock(userId: string): Promise<StudyGroup[]> {
-  const myGroupIds = new Set(mockStudyGroupMembers.filter((m) => m.user_id === userId).map((m) => m.group_id));
+  const myGroupIds = new Set(
+    mockStudyGroupMembers.filter((m) => m.user_id === userId).map((m) => m.group_id)
+  );
   const myClassIds = new Set<string>(); // Would need user's classes - passed from caller
   const discoverable = mockStudyGroups.filter((g) => !myGroupIds.has(g.id));
   const groups: StudyGroup[] = [];
   for (const row of discoverable) {
     const memberCount = mockStudyGroupMembers.filter((m) => m.group_id === row.id).length;
-    const cls = row.class_id ? MOCK_CLASSES.find((c) => c.id === row.class_id) : undefined;
+    const cls = row.class_id
+      ? MOCK_CLASSES.find((c) => c.id === row.class_id)
+      : undefined;
     groups.push(toStudyGroup(row, memberCount, undefined, cls));
   }
   return groups;
@@ -183,7 +201,9 @@ async function createStudyGroupSupabase(
     .insert({ group_id: group.id, user_id: userId });
   if (memberErr) throw new Error(memberErr.message);
   const allClasses = await getClasses();
-  const cls = group.class_id ? allClasses.find((c) => c.id === group.class_id) : undefined;
+  const cls = group.class_id
+    ? allClasses.find((c) => c.id === group.class_id)
+    : undefined;
   return toStudyGroup(group, 1, undefined, cls);
 }
 
@@ -197,7 +217,8 @@ export async function createStudyGroup(
 }
 
 async function joinStudyGroupMock(groupId: string, userId: string): Promise<boolean> {
-  if (mockStudyGroupMembers.some((m) => m.group_id === groupId && m.user_id === userId)) return true;
+  if (mockStudyGroupMembers.some((m) => m.group_id === groupId && m.user_id === userId))
+    return true;
   mockStudyGroupMembers.push({ group_id: groupId, user_id: userId });
   return true;
 }
@@ -226,19 +247,27 @@ export async function ensureStudyGroupsForClasses(
     for (const classId of classIds) {
       const existing = mockStudyGroups.find((g) => g.class_id === classId);
       if (existing) {
-        if (!mockStudyGroupMembers.some((m) => m.group_id === existing.id && m.user_id === userId)) {
+        if (
+          !mockStudyGroupMembers.some(
+            (m) => m.group_id === existing.id && m.user_id === userId
+          )
+        ) {
           mockStudyGroupMembers.push({ group_id: existing.id, user_id: userId });
         }
       } else {
         const cls = MOCK_CLASSES.find((c) => c.id === classId);
         const id = `sg-${Date.now()}-${classId}`;
-        mockStudyGroups.push({ id, name: cls?.name ?? "Study Group", class_id: classId, created_by: userId });
+        mockStudyGroups.push({
+          id,
+          name: cls?.name ?? "Study Group",
+          class_id: classId,
+          created_by: userId,
+        });
         mockStudyGroupMembers.push({ group_id: id, user_id: userId });
       }
     }
   }
 }
-
 
 export async function getGroupPendingUserInviteIds(groupId: string): Promise<string[]> {
   if (API_CONFIG.useSupabase) {
@@ -249,7 +278,9 @@ export async function getGroupPendingUserInviteIds(groupId: string): Promise<str
       .eq("group_id", groupId);
     return (data ?? []).map((r) => r.recipient_id);
   }
-  return mockStudyGroupUserInvites.filter((i) => i.group_id === groupId).map((i) => i.recipient_id);
+  return mockStudyGroupUserInvites
+    .filter((i) => i.group_id === groupId)
+    .map((i) => i.recipient_id);
 }
 
 export async function getGroupMemberIds(groupId: string): Promise<string[]> {
@@ -294,7 +325,12 @@ export async function getStudyGroup(groupId: string): Promise<StudyGroup | null>
       .limit(1);
     const nextSessionRow = sessionRows?.[0];
     const nextSession = nextSessionRow
-      ? { id: nextSessionRow.id, groupId: nextSessionRow.group_id, scheduledAt: nextSessionRow.scheduled_at, location: nextSessionRow.location ?? undefined }
+      ? {
+          id: nextSessionRow.id,
+          groupId: nextSessionRow.group_id,
+          scheduledAt: nextSessionRow.scheduled_at,
+          location: nextSessionRow.location ?? undefined,
+        }
       : undefined;
     const allClasses = await getClasses();
     const cls = row.class_id ? allClasses.find((c) => c.id === row.class_id) : undefined;
@@ -333,7 +369,10 @@ export async function getOrCreateClassJoinToken(classId: string): Promise<string
   return token;
 }
 
-export async function joinClassByToken(token: string, userId: string): Promise<{ classId: string; groupId: string } | null> {
+export async function joinClassByToken(
+  token: string,
+  userId: string
+): Promise<{ classId: string; groupId: string } | null> {
   if (API_CONFIG.useSupabase) {
     if (!supabase) return null;
     const { data: row } = await supabase
@@ -370,13 +409,22 @@ export async function joinClassByToken(token: string, userId: string): Promise<{
   const classId = Object.entries(mockClassJoinTokens).find(([, t]) => t === token)?.[0];
   if (!classId) return null;
   const existingGroup = mockStudyGroups.find((g) => g.class_id === classId);
-  if (!mockStudyGroupMembers.some((m) => m.group_id === (existingGroup?.id ?? "") && m.user_id === userId)) {
+  if (
+    !mockStudyGroupMembers.some(
+      (m) => m.group_id === (existingGroup?.id ?? "") && m.user_id === userId
+    )
+  ) {
     if (existingGroup) {
       mockStudyGroupMembers.push({ group_id: existingGroup.id, user_id: userId });
     } else {
       const cls = MOCK_CLASSES.find((c) => c.id === classId);
       const id = `sg-${Date.now()}-${classId}`;
-      mockStudyGroups.push({ id, name: cls?.name ?? "Study Group", class_id: classId, created_by: userId });
+      mockStudyGroups.push({
+        id,
+        name: cls?.name ?? "Study Group",
+        class_id: classId,
+        created_by: userId,
+      });
       mockStudyGroupMembers.push({ group_id: id, user_id: userId });
       return { classId, groupId: id };
     }
@@ -384,7 +432,9 @@ export async function joinClassByToken(token: string, userId: string): Promise<{
   return { classId, groupId: existingGroup?.id ?? classId };
 }
 
-export async function getUpcomingSessions(userId: string): Promise<Array<StudyGroupSession & { groupName: string }>> {
+export async function getUpcomingSessions(
+  userId: string
+): Promise<Array<StudyGroupSession & { groupName: string }>> {
   if (API_CONFIG.useSupabase) {
     if (!supabase) return [];
     const { data: memberships } = await supabase
@@ -424,8 +474,12 @@ export async function getUpcomingSessions(userId: string): Promise<Array<StudyGr
     .filter((m) => m.user_id === userId)
     .map((m) => m.group_id);
   const upcoming = mockStudyGroupSessions
-    .filter((s) => myGroupIds.includes(s.group_id) && new Date(s.scheduled_at) > new Date())
-    .sort((a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime())
+    .filter(
+      (s) => myGroupIds.includes(s.group_id) && new Date(s.scheduled_at) > new Date()
+    )
+    .sort(
+      (a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime()
+    )
     .slice(0, 20);
   return upcoming.map((s) => {
     const g = mockStudyGroups.find((gr) => gr.id === s.group_id);
@@ -448,18 +502,37 @@ export async function createGroupSession(
     if (!supabase) return null;
     const { data, error } = await supabase
       .from("study_group_sessions")
-      .insert({ group_id: groupId, scheduled_at: scheduledAt, location: location ?? null })
+      .insert({
+        group_id: groupId,
+        scheduled_at: scheduledAt,
+        location: location ?? null,
+      })
       .select("id, group_id, scheduled_at, location")
       .single();
     if (error) throw new Error(error.message);
-    return { id: data.id, groupId: data.group_id, scheduledAt: data.scheduled_at, location: data.location ?? undefined };
+    return {
+      id: data.id,
+      groupId: data.group_id,
+      scheduledAt: data.scheduled_at,
+      location: data.location ?? undefined,
+    };
   }
   const id = `sess-${Date.now()}`;
-  mockStudyGroupSessions.push({ id, group_id: groupId, scheduled_at: scheduledAt, location: location ?? null });
+  mockStudyGroupSessions.push({
+    id,
+    group_id: groupId,
+    scheduled_at: scheduledAt,
+    location: location ?? null,
+  });
   return { id, groupId, scheduledAt, location };
 }
 
-let mockStudyGroupInvites: Array<{ id: string; group_id: string; email: string; invited_by: string }> = [];
+let mockStudyGroupInvites: Array<{
+  id: string;
+  group_id: string;
+  email: string;
+  invited_by: string;
+}> = [];
 let mockStudyGroupUserInvites: Array<{
   id: string;
   group_id: string;
@@ -483,7 +556,12 @@ export async function inviteFriendToGroup(
     if (error) throw new Error(error.message);
     return true;
   }
-  if (mockStudyGroupUserInvites.some((i) => i.group_id === groupId && i.recipient_id === recipientId)) return true;
+  if (
+    mockStudyGroupUserInvites.some(
+      (i) => i.group_id === groupId && i.recipient_id === recipientId
+    )
+  )
+    return true;
   mockStudyGroupUserInvites.push({
     id: `ugi-${Date.now()}-${recipientId}`,
     group_id: groupId,
@@ -494,7 +572,9 @@ export async function inviteFriendToGroup(
   return true;
 }
 
-export async function getStudyGroupInvitesForUser(userId: string): Promise<StudyGroupUserInvite[]> {
+export async function getStudyGroupInvitesForUser(
+  userId: string
+): Promise<StudyGroupUserInvite[]> {
   if (API_CONFIG.useSupabase) {
     if (!supabase) return [];
     const { data: rows } = await supabase
@@ -508,7 +588,9 @@ export async function getStudyGroupInvitesForUser(userId: string): Promise<Study
     const groupMap = Object.fromEntries(groups.filter(Boolean).map((g) => [g!.id, g!]));
     const inviterPromises = inviterIds.map((id) => getUser(id));
     const inviters = await Promise.all(inviterPromises);
-    const inviterMap = Object.fromEntries(inviterIds.map((id, i) => [id, inviters[i] ?? null]));
+    const inviterMap = Object.fromEntries(
+      inviterIds.map((id, i) => [id, inviters[i] ?? null])
+    );
     return rows.map((r) => ({
       id: r.id,
       groupId: r.group_id,
@@ -530,14 +612,24 @@ export async function getStudyGroupInvitesForUser(userId: string): Promise<Study
       recipientId: row.recipient_id,
       invitedById: row.invited_by,
       createdAt: row.created_at,
-      group: group ? toStudyGroup(group, mockStudyGroupMembers.filter((m) => m.group_id === row.group_id).length, undefined, group.class_id ? MOCK_CLASSES.find((c) => c.id === group.class_id) : undefined) : undefined,
+      group: group
+        ? toStudyGroup(
+            group,
+            mockStudyGroupMembers.filter((m) => m.group_id === row.group_id).length,
+            undefined,
+            group.class_id ? MOCK_CLASSES.find((c) => c.id === group.class_id) : undefined
+          )
+        : undefined,
       inviter: inviter ?? undefined,
     });
   }
   return results;
 }
 
-export async function acceptStudyGroupInvite(inviteId: string, userId: string): Promise<boolean> {
+export async function acceptStudyGroupInvite(
+  inviteId: string,
+  userId: string
+): Promise<boolean> {
   if (API_CONFIG.useSupabase) {
     if (!supabase) return false;
     const { data: inv } = await supabase
@@ -551,20 +643,32 @@ export async function acceptStudyGroupInvite(inviteId: string, userId: string): 
       .from("study_group_members")
       .insert({ group_id: inv.group_id, user_id: userId });
     if (insErr) throw new Error(insErr.message);
-    const { error: delErr } = await supabase.from("study_group_user_invites").delete().eq("id", inviteId);
+    const { error: delErr } = await supabase
+      .from("study_group_user_invites")
+      .delete()
+      .eq("id", inviteId);
     if (delErr) throw new Error(delErr.message);
     return true;
   }
-  const inv = mockStudyGroupUserInvites.find((i) => i.id === inviteId && i.recipient_id === userId);
+  const inv = mockStudyGroupUserInvites.find(
+    (i) => i.id === inviteId && i.recipient_id === userId
+  );
   if (!inv) return false;
   mockStudyGroupUserInvites = mockStudyGroupUserInvites.filter((i) => i.id !== inviteId);
-  if (!mockStudyGroupMembers.some((m) => m.group_id === inv.group_id && m.user_id === userId)) {
+  if (
+    !mockStudyGroupMembers.some(
+      (m) => m.group_id === inv.group_id && m.user_id === userId
+    )
+  ) {
     mockStudyGroupMembers.push({ group_id: inv.group_id, user_id: userId });
   }
   return true;
 }
 
-export async function declineStudyGroupInvite(inviteId: string, userId: string): Promise<boolean> {
+export async function declineStudyGroupInvite(
+  inviteId: string,
+  userId: string
+): Promise<boolean> {
   if (API_CONFIG.useSupabase) {
     if (!supabase) return false;
     const { error } = await supabase
@@ -575,7 +679,9 @@ export async function declineStudyGroupInvite(inviteId: string, userId: string):
     if (error) throw new Error(error.message);
     return true;
   }
-  const exists = mockStudyGroupUserInvites.some((i) => i.id === inviteId && i.recipient_id === userId);
+  const exists = mockStudyGroupUserInvites.some(
+    (i) => i.id === inviteId && i.recipient_id === userId
+  );
   if (!exists) return false;
   mockStudyGroupUserInvites = mockStudyGroupUserInvites.filter((i) => i.id !== inviteId);
   return true;
@@ -588,13 +694,20 @@ export async function inviteToGroupByEmail(
 ): Promise<boolean> {
   if (API_CONFIG.useSupabase) {
     if (!supabase) return false;
-    const { error } = await supabase
-      .from("study_group_invites")
-      .insert({ group_id: groupId, email: email.trim().toLowerCase(), invited_by: userId });
+    const { error } = await supabase.from("study_group_invites").insert({
+      group_id: groupId,
+      email: email.trim().toLowerCase(),
+      invited_by: userId,
+    });
     if (error) throw new Error(error.message);
     return true;
   }
   const id = `inv-${Date.now()}`;
-  mockStudyGroupInvites.push({ id, group_id: groupId, email: email.trim().toLowerCase(), invited_by: userId });
+  mockStudyGroupInvites.push({
+    id,
+    group_id: groupId,
+    email: email.trim().toLowerCase(),
+    invited_by: userId,
+  });
   return true;
 }

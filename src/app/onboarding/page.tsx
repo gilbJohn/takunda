@@ -60,12 +60,12 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="space-y-8 rounded-lg border border-gray-200 bg-white p-8 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <div className="w-full max-w-lg space-y-8 rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-lg sm:p-8">
       <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">
+        <h1 className="text-xl font-bold text-slate-100 sm:text-2xl">
           Complete your profile
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-slate-400">
           Connect with classmates—add your contact info, school, and classes
         </p>
       </div>
@@ -75,7 +75,7 @@ export default function OnboardingPage() {
         <div className="space-y-2">
           <label
             htmlFor="phone"
-            className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+            className="flex items-center gap-2 text-sm font-medium text-slate-300"
           >
             <Phone className="h-4 w-4" />
             Phone number
@@ -93,7 +93,7 @@ export default function OnboardingPage() {
         <div className="space-y-2">
           <label
             htmlFor="university"
-            className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+            className="flex items-center gap-2 text-sm font-medium text-slate-300"
           >
             <GraduationCap className="h-4 w-4" />
             University
@@ -109,17 +109,17 @@ export default function OnboardingPage() {
 
         {/* Classes */}
         <div className="space-y-3">
-          <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label className="flex items-center gap-2 text-sm font-medium text-slate-300">
             <Users className="h-4 w-4" />
             Your classes
           </label>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-slate-400">
             Select all classes you&apos;re currently taking
           </p>
           {classesLoading ? (
-            <p className="text-sm text-gray-500">Loading classes...</p>
+            <p className="text-sm text-slate-400">Loading classes...</p>
           ) : classes.length === 0 ? (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-slate-400">
               No classes available yet. You can add them from your profile later.
             </p>
           ) : (
@@ -131,8 +131,8 @@ export default function OnboardingPage() {
                   onClick={() => toggleClass(cls.id)}
                   className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                     selectedClassIds.includes(cls.id)
-                      ? "bg-gray-900 text-white dark:bg-gray-50 dark:text-gray-900"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                      ? "bg-emerald-600/15 text-emerald-500"
+                      : "bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-100"
                   }`}
                 >
                   {cls.code ?? cls.name}
@@ -142,9 +142,7 @@ export default function OnboardingPage() {
           )}
         </div>
 
-        {error && (
-          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-        )}
+        {error && <p className="text-sm text-red-400">{error}</p>}
 
         <Button type="submit" className="w-full" disabled={isSubmitting}>
           {isSubmitting ? "Saving..." : "Complete setup"}

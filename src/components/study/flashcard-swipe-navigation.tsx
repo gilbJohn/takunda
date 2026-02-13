@@ -18,15 +18,11 @@ export function FlashcardSwipeNavigation({
 }: FlashcardSwipeNavigationProps) {
   return (
     <div className="flex items-center justify-between gap-4">
-      <Button
-        variant="outline"
-        onClick={onPrev}
-        disabled={currentIndex === 0}
-      >
+      <Button variant="outline" onClick={onPrev} disabled={currentIndex === 0}>
         <ChevronLeft className="mr-2 h-4 w-4" />
         Previous
       </Button>
-      <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+      <span className="text-sm font-medium text-slate-400">
         Card {currentIndex + 1} of {totalCards}
       </span>
       <Button

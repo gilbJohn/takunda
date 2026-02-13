@@ -16,7 +16,9 @@ export function AuthSync() {
     if (!API_CONFIG.useSupabase || !client) return;
 
     const syncSession = async () => {
-      const { data: { session } } = await client.auth.getSession();
+      const {
+        data: { session },
+      } = await client.auth.getSession();
       if (!session?.user) {
         useAuthStore.setState({ user: null, isLoggedIn: false });
         return;
@@ -40,7 +42,8 @@ export function AuthSync() {
 
       const profileData = profile ?? {
         id: session.user.id,
-        name: session.user.user_metadata?.name ?? session.user.email?.split("@")[0] ?? "User",
+        name:
+          session.user.user_metadata?.name ?? session.user.email?.split("@")[0] ?? "User",
         email: session.user.email ?? "",
         avatar: null,
         phone: null,
@@ -61,15 +64,15 @@ export function AuthSync() {
 
     syncSession();
 
-    const { data: { subscription } } = client.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event === "SIGNED_OUT") {
-          useAuthStore.setState({ user: null, isLoggedIn: false });
-        } else if (session?.user) {
-          await syncSession();
-        }
+    const {
+      data: { subscription },
+    } = client.auth.onAuthStateChange(async (event, session) => {
+      if (event === "SIGNED_OUT") {
+        useAuthStore.setState({ user: null, isLoggedIn: false });
+      } else if (session?.user) {
+        await syncSession();
       }
-    );
+    });
 
     return () => subscription.unsubscribe();
   }, []);

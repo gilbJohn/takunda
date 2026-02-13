@@ -4,11 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/auth-store";
 
-export default function OnboardingLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function OnboardingLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
   const onboardingCompleted = useAuthStore((s) => s.user?.onboardingCompleted);
@@ -28,7 +24,7 @@ export default function OnboardingLayout({
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 py-12 dark:bg-gray-950">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-950 px-4 py-12">
       <div className="w-full max-w-lg">{children}</div>
     </div>
   );

@@ -41,9 +41,13 @@ export default function JeopardyGamePage() {
   const [newPlayerName, setNewPlayerName] = useState("");
   const [gameStarted, setGameStarted] = useState(false);
   const [playKey, setPlayKey] = useState(0);
-  const [board, setBoard] = useState<{ cardId: string; question: string; correctAnswer: string }[][] | null>(null);
+  const [board, setBoard] = useState<
+    { cardId: string; question: string; correctAnswer: string }[][] | null
+  >(null);
   const [answered, setAnswered] = useState<Record<string, boolean>>({});
-  const [selectedCell, setSelectedCell] = useState<{ cat: number; row: number } | null>(null);
+  const [selectedCell, setSelectedCell] = useState<{ cat: number; row: number } | null>(
+    null
+  );
   const [answerRevealed, setAnswerRevealed] = useState(false);
 
   const builtBoard = useMemo(() => {
@@ -339,7 +343,11 @@ export default function JeopardyGamePage() {
                         </Button>
                       ))}
                     </div>
-                    <Button variant="secondary" onClick={handleCloseModal} className="mt-2">
+                    <Button
+                      variant="secondary"
+                      onClick={handleCloseModal}
+                      className="mt-2"
+                    >
                       No one / Skip
                     </Button>
                   </div>

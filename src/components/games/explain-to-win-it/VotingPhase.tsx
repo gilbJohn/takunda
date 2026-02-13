@@ -28,15 +28,22 @@ export function VotingPhase({
       <header className="space-y-2 text-center border-b pb-4">
         <div className="flex items-center justify-center gap-2 text-gray-500 dark:text-gray-400">
           <Vote className="h-5 w-5" />
-          <span className="text-xs font-bold uppercase tracking-widest">Pass the computer to...</span>
+          <span className="text-xs font-bold uppercase tracking-widest">
+            Pass the computer to...
+          </span>
         </div>
-        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{currentVoterName}</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400">Explain: &quot;{term}&quot;</p>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+          {currentVoterName}
+        </h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Explain: &quot;{term}&quot;
+        </p>
       </header>
 
       <div className="space-y-3">
         <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-          Vote for the best explanation (yours is hidden – you can&apos;t vote for yourself)
+          Vote for the best explanation (yours is hidden – you can&apos;t vote for
+          yourself)
         </p>
         <div className="space-y-2">
           {submissions.map((sub) => (
@@ -56,12 +63,7 @@ export function VotingPhase({
         </div>
       </div>
 
-      <Button
-        className="w-full"
-        size="lg"
-        onClick={onSubmitVote}
-        disabled={!selectedId}
-      >
+      <Button className="w-full" size="lg" onClick={onSubmitVote} disabled={!selectedId}>
         Submit Vote
       </Button>
     </Card>

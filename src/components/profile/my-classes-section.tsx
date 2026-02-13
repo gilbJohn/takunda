@@ -13,10 +13,10 @@ export function MyClassesSection({
   if (classes.length === 0) {
     return (
       <section>
-        <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-50">
+        <h2 className="mb-4 text-lg font-semibold text-slate-100">
           {title}
         </h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-slate-400">
           No classes enrolled yet.
         </p>
       </section>
@@ -25,7 +25,7 @@ export function MyClassesSection({
 
   return (
     <section>
-      <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-50">
+      <h2 className="mb-4 text-lg font-semibold text-slate-100">
         {title}
       </h2>
       <div className="flex flex-wrap gap-2">

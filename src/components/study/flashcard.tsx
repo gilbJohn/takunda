@@ -25,27 +25,25 @@ export function Flashcard({ card, className }: FlashcardProps) {
         }}
       >
         <div
-          className="absolute inset-0 flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white p-8 shadow-lg dark:border-gray-800 dark:bg-gray-950"
+          className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 p-8 shadow-lg"
           style={{ backfaceVisibility: "hidden" }}
         >
-          <p className="text-center text-lg text-gray-900 dark:text-gray-50">
+          <p className="text-center text-lg text-slate-100">
             {card.front || "No question"}
           </p>
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            Click to flip
-          </p>
+          <p className="mt-2 text-sm text-emerald-500/80">Click to flip</p>
         </div>
         <div
-          className="absolute inset-0 flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-gray-50 p-8 shadow-lg dark:border-gray-800 dark:bg-gray-900"
+          className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-slate-700 bg-slate-800 p-8 shadow-lg"
           style={{
             backfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
           }}
         >
-          <p className="text-center text-lg text-gray-900 dark:text-gray-50">
+          <p className="text-center text-lg text-slate-100">
             {card.back || "No answer"}
           </p>
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mt-2 text-sm text-emerald-500/80">
             Click to flip back
           </p>
         </div>

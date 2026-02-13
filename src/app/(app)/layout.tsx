@@ -7,11 +7,7 @@ import { useAuthStore } from "@/stores/auth-store";
 import { useStudyStore } from "@/stores/study-store";
 import { isApiEnabled } from "@/lib/config/api";
 
-export default function AppLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
   const onboardingCompleted = useAuthStore((s) => s.user?.onboardingCompleted);

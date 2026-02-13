@@ -44,9 +44,7 @@ export function DeckCard({ deck, showCreator }: DeckCardProps) {
         <CardTitle>{deck.title}</CardTitle>
         <CardDescription>
           {cardCount} {cardCount === 1 ? "card" : "cards"}
-          {showCreator && deck.creatorName && (
-            <> · by {deck.creatorName}</>
-          )}
+          {showCreator && deck.creatorName && <> · by {deck.creatorName}</>}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-wrap gap-2">

@@ -8,16 +8,14 @@ export interface PageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
   ({ className, title, description, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn("space-y-1", className)}
-      {...props}
-    >
-      <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-50">
+    <div ref={ref} className={cn("space-y-1.5", className)} {...props}>
+      <h1 className="text-2xl font-bold tracking-tight text-slate-100 sm:text-3xl">
         {title}
       </h1>
       {description && (
-        <p className="text-gray-500 dark:text-gray-400">{description}</p>
+        <p className="text-sm text-slate-400 sm:text-base">
+          {description}
+        </p>
       )}
     </div>
   )

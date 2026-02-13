@@ -4,12 +4,7 @@ import { useState, useCallback, useEffect, useMemo } from "react";
 import { LobbyView } from "./LobbyView";
 import { GameView } from "./GameView";
 import { ResultsView } from "./ResultsView";
-import type {
-  Player,
-  Question,
-  LastOneStandingProps,
-  GameConfig,
-} from "./types";
+import type { Player, Question, LastOneStandingProps, GameConfig } from "./types";
 
 const DEFAULT_CONFIG: GameConfig = {
   timerPerQuestion: 15,
@@ -18,13 +13,44 @@ const DEFAULT_CONFIG: GameConfig = {
   maxQuestions: 0,
 };
 
+/** Minimum seconds per question (floor as rounds speed up) */
+const MIN_TIMER = 5;
+
+/** Seconds to subtract per round (time speeds up as game progresses) */
+const TIMER_REDUCTION_PER_ROUND = 1;
+
+/** Get timer duration for a given round index (decreases each round) */
+function getTimerForRound(baseSeconds: number, roundIndex: number): number {
+  return Math.max(MIN_TIMER, baseSeconds - roundIndex * TIMER_REDUCTION_PER_ROUND);
+}
+
 /** Fallback questions when externalQuestions is empty (MVP demo) */
 const FALLBACK_QUESTIONS: Question[] = [
   { id: "f1", text: "What is 2 + 2?", correctAnswer: "4", choices: ["3", "4", "5", "6"] },
-  { id: "f2", text: "What is the capital of France?", correctAnswer: "Paris", choices: ["London", "Paris", "Berlin", "Madrid"] },
-  { id: "f3", text: "What planet is known as the Red Planet?", correctAnswer: "Mars", choices: ["Venus", "Mars", "Jupiter", "Saturn"] },
-  { id: "f4", text: "How many continents are there?", correctAnswer: "7", choices: ["5", "6", "7", "8"] },
-  { id: "f5", text: "What is H2O?", correctAnswer: "Water", choices: ["Salt", "Water", "Sugar", "Oil"] },
+  {
+    id: "f2",
+    text: "What is the capital of France?",
+    correctAnswer: "Paris",
+    choices: ["London", "Paris", "Berlin", "Madrid"],
+  },
+  {
+    id: "f3",
+    text: "What planet is known as the Red Planet?",
+    correctAnswer: "Mars",
+    choices: ["Venus", "Mars", "Jupiter", "Saturn"],
+  },
+  {
+    id: "f4",
+    text: "How many continents are there?",
+    correctAnswer: "7",
+    choices: ["5", "6", "7", "8"],
+  },
+  {
+    id: "f5",
+    text: "What is H2O?",
+    correctAnswer: "Water",
+    choices: ["Salt", "Water", "Sugar", "Oil"],
+  },
 ];
 
 function shuffle<T>(arr: T[]): T[] {
@@ -58,7 +84,10 @@ export function LastOneStanding({
   const allQuestions = useMemo(() => {
     const source = externalQuestions.length > 0 ? externalQuestions : FALLBACK_QUESTIONS;
     const shuffled = shuffle(source);
-    const max = config.maxQuestions && config.maxQuestions > 0 ? config.maxQuestions : shuffled.length;
+    const max =
+      config.maxQuestions && config.maxQuestions > 0
+        ? config.maxQuestions
+        : shuffled.length;
     return shuffled.slice(0, max);
   }, [externalQuestions, config.maxQuestions]);
 
@@ -71,10 +100,7 @@ export function LastOneStanding({
   const nextPlayers = players;
 
   const addPlayer = useCallback((name: string) => {
-    setPlayers((p) => [
-      ...p,
-      { id: `p-${Date.now()}`, name, isAlive: true },
-    ]);
+    setPlayers((p) => [...p, { id: `p-${Date.now()}`, name, isAlive: true }]);
   }, []);
 
   const removePlayer = useCallback((id: string) => {
@@ -88,7 +114,7 @@ export function LastOneStanding({
     setPhase("playing");
     setCurrentQuestionIndex(0);
     setEliminatedThisRound([]);
-    setTimeRemaining(config.timerPerQuestion);
+    setTimeRemaining(getTimerForRound(config.timerPerQuestion, 0));
     setRoundEnded(false);
     setCurrentRespondentIndex(0);
     setPlayers((p) => p.map((pl) => ({ ...pl, isAlive: true })));
@@ -96,9 +122,7 @@ export function LastOneStanding({
 
   const eliminatePlayer = useCallback((playerId: string) => {
     setPlayers((p) =>
-      p.map((pl) =>
-        pl.id === playerId ? { ...pl, isAlive: false } : pl
-      )
+      p.map((pl) => (pl.id === playerId ? { ...pl, isAlive: false } : pl))
     );
     setEliminatedThisRound((e) => (e.includes(playerId) ? e : [...e, playerId]));
   }, []);
@@ -142,7 +166,8 @@ export function LastOneStanding({
   const advanceRound = useCallback(() => {
     setEliminatedThisRound([]);
     setRoundEnded(false);
-    setTimeRemaining(config.timerPerQuestion);
+    const nextRoundIndex = currentQuestionIndex + 1;
+    setTimeRemaining(getTimerForRound(config.timerPerQuestion, nextRoundIndex));
 
     const stillAlive = players.filter((p) => p.isAlive);
     if (stillAlive.length <= 1) {
@@ -161,9 +186,7 @@ export function LastOneStanding({
 
     setCurrentQuestionIndex((i) => i + 1);
     // Next alive player's turn (round-robin)
-    const nextAlive = players
-      .map((p, idx) => ({ p, idx }))
-      .filter(({ p }) => p.isAlive);
+    const nextAlive = players.map((p, idx) => ({ p, idx })).filter(({ p }) => p.isAlive);
     const currentIdx = nextAlive.findIndex(({ p }) => p.id === currentRespondent?.id);
     const next = nextAlive[(currentIdx + 1) % nextAlive.length];
     setCurrentRespondentIndex(next?.idx ?? 0);
@@ -178,7 +201,8 @@ export function LastOneStanding({
 
   // Timer: if current player doesn't answer in time, they're eliminated
   useEffect(() => {
-    if (phase !== "playing" || roundEnded || !currentQuestion || !currentRespondent) return;
+    if (phase !== "playing" || roundEnded || !currentQuestion || !currentRespondent)
+      return;
 
     const tick = () => {
       setTimeRemaining((t) => {
@@ -223,13 +247,7 @@ export function LastOneStanding({
 
   if (phase === "results") {
     const winner = players.find((p) => p.isAlive) ?? null;
-    return (
-      <ResultsView
-        winner={winner}
-        onPlayAgain={handlePlayAgain}
-        title={title}
-      />
-    );
+    return <ResultsView winner={winner} onPlayAgain={handlePlayAgain} title={title} />;
   }
 
   if (!currentQuestion) {
@@ -247,7 +265,7 @@ export function LastOneStanding({
       players={nextPlayers}
       eliminatedThisRound={eliminatedThisRound}
       timeRemaining={timeRemaining}
-      timerTotal={config.timerPerQuestion}
+      timerTotal={getTimerForRound(config.timerPerQuestion, currentQuestionIndex)}
       onAnswer={handleAnswer}
       roundEnded={roundEnded}
       correctAnswer={currentQuestion.correctAnswer}

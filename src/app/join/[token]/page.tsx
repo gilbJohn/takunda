@@ -16,7 +16,9 @@ export default function JoinByTokenPage() {
   const token = params.token as string;
   const user = useAuthStore((s) => s.user);
   const setUser = useAuthStore((s) => s.setUser);
-  const [status, setStatus] = useState<"loading" | "success" | "error" | "need-auth">("loading");
+  const [status, setStatus] = useState<"loading" | "success" | "error" | "need-auth">(
+    "loading"
+  );
   const [message, setMessage] = useState("");
   const joinStartedRef = useRef(false);
 
@@ -64,12 +66,12 @@ export default function JoinByTokenPage() {
 
   if (status === "need-auth") {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 dark:bg-gray-950">
-        <div className="w-full max-w-md space-y-6 rounded-lg border border-gray-200 bg-white p-8 dark:border-gray-800 dark:bg-gray-900">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-50">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-slate-950 px-4">
+        <div className="w-full max-w-md space-y-6 rounded-2xl border border-slate-800 bg-slate-900 p-8">
+          <h1 className="text-xl font-bold text-slate-100">
             Join class
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-slate-400">
             Sign in or create an account to join this class.
           </p>
           <div className="flex flex-col gap-3">
@@ -89,20 +91,20 @@ export default function JoinByTokenPage() {
 
   if (status === "loading") {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-950">
-        <p className="text-gray-500">Joining...</p>
+      <div className="flex min-h-screen items-center justify-center bg-slate-950">
+        <p className="text-slate-400">Joining...</p>
       </div>
     );
   }
 
   if (status === "error") {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 dark:bg-gray-950">
-        <div className="w-full max-w-md space-y-6 rounded-lg border border-gray-200 bg-white p-8 dark:border-gray-800 dark:bg-gray-900">
-          <h1 className="text-xl font-bold text-red-600 dark:text-red-400">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-slate-950 px-4">
+        <div className="w-full max-w-md space-y-6 rounded-2xl border border-slate-800 bg-slate-900 p-8">
+          <h1 className="text-xl font-bold text-red-400">
             Could not join
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">{message}</p>
+          <p className="text-sm text-slate-400">{message}</p>
           <Link href="/dashboard">
             <Button className="w-full">Go to dashboard</Button>
           </Link>
@@ -112,8 +114,8 @@ export default function JoinByTokenPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-950">
-      <p className="text-gray-500">Success! Redirecting to study groups...</p>
+    <div className="flex min-h-screen items-center justify-center bg-slate-950">
+      <p className="text-slate-400">Success! Redirecting to study groups...</p>
     </div>
   );
 }

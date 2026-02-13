@@ -5,6 +5,7 @@ import { useFriends } from "@/hooks/use-friends";
 import { useClasses } from "@/hooks/use-classes";
 import { ProfileCard } from "@/components/profile/profile-card";
 import { PageHeader } from "@/components/shared/page-header";
+import { PageContainer } from "@/components/layout/page-container";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/shared/avatar";
@@ -34,34 +35,34 @@ export default function FriendsPage() {
   if (!user) return null;
 
   return (
-    <div className="container max-w-4xl space-y-10 p-8">
+    <PageContainer maxWidth="lg">
       <PageHeader
         title="Friends"
         description="Your friends and people you can connect with"
       />
 
       {isLoading ? (
-        <p className="text-center text-sm text-gray-500">Loading...</p>
+        <p className="py-12 text-center text-sm text-slate-400">Loading...</p>
       ) : (
-        <div className="space-y-10">
+        <div className="space-y-12">
           {/* Received friend requests */}
           {pendingInvites.length > 0 && (
             <section>
-              <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-gray-50">
-                <Mail className="h-5 w-5" />
+              <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-slate-100">
+                <Mail className="h-5 w-5 text-emerald-500" />
                 Friend requests
-                <span className="rounded-full bg-gray-200 px-2 py-0.5 text-sm font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                <span className="rounded-full bg-slate-800 px-2.5 py-0.5 text-sm font-medium text-slate-300">
                   {pendingInvites.length}
                 </span>
               </h2>
-              <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+              <p className="mb-4 text-sm text-slate-400">
                 People who want to connect with you
               </p>
               <div className="grid gap-4 sm:grid-cols-2">
                 {pendingInvites.map((inv) => (
                   <div
                     key={inv.id}
-                    className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950"
+                    className="flex items-center justify-between rounded-2xl border border-slate-800 bg-slate-900 p-4"
                   >
                     <div className="flex items-center gap-4">
                       <Avatar
@@ -70,19 +71,16 @@ export default function FriendsPage() {
                         className="h-12 w-12"
                       />
                       <div>
-                        <h3 className="font-semibold text-gray-900 dark:text-gray-50">
+                        <h3 className="font-semibold text-slate-100">
                           {inv.sender?.name}
                         </h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                        <p className="text-sm text-slate-400">
                           {inv.sender?.email}
                         </p>
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        onClick={() => acceptInvite(inv.id)}
-                      >
+                      <Button size="sm" onClick={() => acceptInvite(inv.id)}>
                         Accept
                       </Button>
                       <Button
@@ -102,21 +100,21 @@ export default function FriendsPage() {
           {/* Sent (pending) friend requests */}
           {sentInvites.length > 0 && (
             <section>
-              <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-gray-50">
-                <Send className="h-5 w-5" />
+              <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-slate-100">
+                <Send className="h-5 w-5 text-emerald-500" />
                 Pending requests
-                <span className="rounded-full bg-gray-200 px-2 py-0.5 text-sm font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                <span className="rounded-full bg-slate-800 px-2.5 py-0.5 text-sm font-medium text-slate-300">
                   {sentInvites.length}
                 </span>
               </h2>
-              <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+              <p className="mb-4 text-sm text-slate-400">
                 Requests you sent, awaiting response
               </p>
               <div className="grid gap-4 sm:grid-cols-2">
                 {sentInvites.map((inv) => (
                   <div
                     key={inv.id}
-                    className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950"
+                    className="flex items-center justify-between rounded-2xl border border-slate-800 bg-slate-900 p-4"
                   >
                     <div className="flex items-center gap-4">
                       <Avatar
@@ -125,15 +123,15 @@ export default function FriendsPage() {
                         className="h-12 w-12"
                       />
                       <div>
-                        <h3 className="font-semibold text-gray-900 dark:text-gray-50">
+                        <h3 className="font-semibold text-slate-100">
                           {inv.recipient?.name}
                         </h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                        <p className="text-sm text-slate-400">
                           {inv.recipient?.email}
                         </p>
                       </div>
                     </div>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                    <span className="text-sm text-slate-400">
                       Pending
                     </span>
                   </div>
@@ -144,8 +142,8 @@ export default function FriendsPage() {
 
           {/* My Friends */}
           <section>
-            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-gray-50">
-              <Users className="h-5 w-5" />
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-slate-100">
+              <Users className="h-5 w-5 text-emerald-500" />
               My friends
             </h2>
             {friends.length === 0 ? (
@@ -159,7 +157,7 @@ export default function FriendsPage() {
                 {friends.map((u) => (
                   <div
                     key={u.id}
-                    className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950"
+                    className="flex flex-col gap-4 rounded-2xl border border-slate-800 bg-slate-900 p-4"
                   >
                     <ProfileCard
                       user={u}
@@ -179,11 +177,11 @@ export default function FriendsPage() {
 
           {/* Suggestions */}
           <section>
-            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-gray-50">
-              <UserPlus className="h-5 w-5" />
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-slate-100">
+              <UserPlus className="h-5 w-5 text-emerald-500" />
               Suggested friends
             </h2>
-            <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+            <p className="mb-4 text-sm text-slate-400">
               Classmates you can add as friends
             </p>
             {suggestions.length === 0 ? (
@@ -197,7 +195,7 @@ export default function FriendsPage() {
                 {suggestions.map((u) => (
                   <div
                     key={u.id}
-                    className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950"
+                    className="flex flex-col gap-4 rounded-2xl border border-slate-800 bg-slate-900 p-4"
                   >
                     <ProfileCard
                       user={u}
@@ -218,6 +216,6 @@ export default function FriendsPage() {
           </section>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }

@@ -27,10 +27,7 @@ export default function StudyLearnPage() {
   if (!deck) {
     return (
       <div className="container max-w-2xl space-y-8 p-8">
-        <PageHeader
-          title="Deck not found"
-          description="This deck could not be found."
-        />
+        <PageHeader title="Deck not found" description="This deck could not be found." />
         <Link href="/study">
           <Button variant="outline">Back to Study</Button>
         </Link>
@@ -44,10 +41,7 @@ export default function StudyLearnPage() {
   if (cards.length === 0) {
     return (
       <div className="container max-w-2xl space-y-8 p-8">
-        <PageHeader
-          title={deck.title}
-          description="This deck has no cards yet."
-        />
+        <PageHeader title={deck.title} description="This deck has no cards yet." />
         <Link href="/study">
           <Button variant="outline">Back to Study</Button>
         </Link>
@@ -67,9 +61,7 @@ export default function StudyLearnPage() {
           currentIndex={currentIndex}
           totalCards={cards.length}
           onPrev={() => setCurrentIndex((i) => Math.max(0, i - 1))}
-          onNext={() =>
-            setCurrentIndex((i) => Math.min(cards.length - 1, i + 1))
-          }
+          onNext={() => setCurrentIndex((i) => Math.min(cards.length - 1, i + 1))}
         />
       </div>
       <div className="flex gap-4">

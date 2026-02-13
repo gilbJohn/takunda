@@ -21,9 +21,13 @@ export function LoginForm() {
     try {
       if (await login(email, password)) {
         const completed = useAuthStore.getState().user?.onboardingCompleted;
-        const redirect = typeof window !== "undefined" ? sessionStorage.getItem("takunda-join-redirect") : null;
+        const redirect =
+          typeof window !== "undefined"
+            ? sessionStorage.getItem("takunda-join-redirect")
+            : null;
         if (redirect) {
-          if (typeof window !== "undefined") sessionStorage.removeItem("takunda-join-redirect");
+          if (typeof window !== "undefined")
+            sessionStorage.removeItem("takunda-join-redirect");
           router.push(redirect);
         } else {
           router.push(completed ? "/dashboard" : "/onboarding");
@@ -41,18 +45,20 @@ export function LoginForm() {
   };
 
   return (
-    <div className="space-y-6 rounded-lg border border-gray-200 bg-white p-8 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <div className="w-full space-y-6 rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-lg sm:p-8">
       <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-bold">Welcome back</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Sign in to your account
+        <h1 className="text-2xl font-bold tracking-tight text-slate-100 sm:text-3xl">
+          Welcome back
+        </h1>
+        <p className="text-sm text-slate-400">
+          Sign in to pick up where you left off
         </p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <label
             htmlFor="email"
-            className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            className="text-sm font-medium text-slate-300"
           >
             Email (not username)
           </label>
@@ -68,7 +74,7 @@ export function LoginForm() {
         <div className="space-y-2">
           <label
             htmlFor="password"
-            className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            className="text-sm font-medium text-slate-300"
           >
             Password
           </label>
@@ -81,16 +87,17 @@ export function LoginForm() {
             required
           />
         </div>
-        {error && (
-          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-        )}
+        {error && <p className="text-sm text-red-400">{error}</p>}
         <Button type="submit" className="w-full">
           Log in
         </Button>
       </form>
-      <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-center text-sm text-slate-400">
         Don&apos;t have an account?{" "}
-        <Link href="/signup" className="font-medium text-gray-900 hover:underline dark:text-gray-50">
+        <Link
+          href="/signup"
+          className="font-medium text-emerald-500 hover:text-emerald-400 hover:underline"
+        >
           Sign up
         </Link>
       </p>

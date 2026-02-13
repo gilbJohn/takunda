@@ -7,6 +7,7 @@ import { useClasses } from "@/hooks/use-classes";
 import { UserSearch } from "@/components/social/user-search";
 import { ProfileCard } from "@/components/profile/profile-card";
 import { PageHeader } from "@/components/shared/page-header";
+import { PageContainer } from "@/components/layout/page-container";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Users } from "lucide-react";
 
@@ -23,7 +24,7 @@ export default function FindPage() {
   });
 
   return (
-    <div className="container max-w-4xl space-y-8 p-8">
+    <PageContainer maxWidth="lg">
       <PageHeader
         title="Find classmates"
         description="Search for students in your classes"
@@ -56,6 +57,6 @@ export default function FindPage() {
           ))}
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }
