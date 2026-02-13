@@ -25,9 +25,7 @@ const DEFAULT_TERMS: Term[] = [
 
 function normalizeTerms(input: (string | Term)[]): Term[] {
   return input.map((t, i) =>
-    typeof t === "string"
-      ? { id: `term-${i}`, term: t, category: "General" }
-      : t
+    typeof t === "string" ? { id: `term-${i}`, term: t, category: "General" } : t
   );
 }
 
@@ -72,10 +70,7 @@ export function ExplainToWin({
   const { emit } = useGameSocket(roomId);
 
   const addPlayer = useCallback((name: string) => {
-    setPlayers((p) => [
-      ...p,
-      { id: `p-${Date.now()}`, name, isHost: p.length === 0 },
-    ]);
+    setPlayers((p) => [...p, { id: `p-${Date.now()}`, name, isHost: p.length === 0 }]);
   }, []);
 
   const removePlayer = useCallback((id: string) => {
@@ -118,7 +113,14 @@ export function ExplainToWin({
       setCurrentExplainPlayerIndex((i) => i + 1);
       setTimeLeft(timerDuration);
     }
-  }, [explanation, currentTerm, currentExplainPlayer, currentExplainPlayerIndex, players.length, timerDuration]);
+  }, [
+    explanation,
+    currentTerm,
+    currentExplainPlayer,
+    currentExplainPlayerIndex,
+    players.length,
+    timerDuration,
+  ]);
 
   const handleSubmitVote = useCallback(() => {
     if (!currentVoter || !selectedSubmissionId) return;
@@ -148,7 +150,7 @@ export function ExplainToWin({
   const handleFinishGame = useCallback(() => {
     const winningSub = getWinningSubmission();
     const winner = winningSub
-      ? players.find((p) => p.id === winningSub.authorId) ?? null
+      ? (players.find((p) => p.id === winningSub.authorId) ?? null)
       : null;
     const result: GameResult = {
       winner,
@@ -249,7 +251,7 @@ export function ExplainToWin({
   if (phase === "results") {
     const winningSub = getWinningSubmission();
     const winner = winningSub
-      ? players.find((p) => p.id === winningSub.authorId) ?? null
+      ? (players.find((p) => p.id === winningSub.authorId) ?? null)
       : null;
 
     return (

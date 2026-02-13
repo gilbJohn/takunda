@@ -18,7 +18,9 @@ export default function ProfileByIdPage() {
   const { classes: allClasses } = useClasses();
 
   useEffect(() => {
-    getUser(id).then(setUser).catch(() => setUser(null));
+    getUser(id)
+      .then(setUser)
+      .catch(() => setUser(null));
   }, [id]);
 
   const classes = user
@@ -38,10 +40,7 @@ export default function ProfileByIdPage() {
   if (!user) {
     return (
       <div className="container max-w-2xl space-y-8 p-8">
-        <PageHeader
-          title="User not found"
-          description="This user could not be found."
-        />
+        <PageHeader title="User not found" description="This user could not be found." />
         <Link href="/find">
           <Button variant="outline">Back to Find</Button>
         </Link>
@@ -51,10 +50,7 @@ export default function ProfileByIdPage() {
 
   return (
     <div className="container max-w-2xl space-y-8 p-8">
-      <PageHeader
-        title={user.name}
-        description="View profile"
-      />
+      <PageHeader title={user.name} description="View profile" />
       <div className="space-y-8 rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-950">
         <ProfileHeader user={user} showEmail={false} />
         <MyClassesSection classes={classes} title="Classes" />

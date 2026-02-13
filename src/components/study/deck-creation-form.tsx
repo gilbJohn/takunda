@@ -15,9 +15,7 @@ export function DeckCreationForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cardEditorRef = useRef<HTMLDivElement>(null);
   const [title, setTitle] = useState("");
-  const [cards, setCards] = useState<Card[]>([
-    { id: "card-1", front: "", back: "" },
-  ]);
+  const [cards, setCards] = useState<Card[]>([{ id: "card-1", front: "", back: "" }]);
 
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,7 +23,10 @@ export function DeckCreationForm() {
   const [importError, setImportError] = useState<string | null>(null);
   const [importText, setImportText] = useState("");
 
-  const applyGeneratedCards = (data: { cards: { front: string; back: string }[]; suggestedTitle?: string }) => {
+  const applyGeneratedCards = (data: {
+    cards: { front: string; back: string }[];
+    suggestedTitle?: string;
+  }) => {
     if (data.cards?.length) {
       const newCards: Card[] = data.cards.map((c, i) => ({
         id: `card-${Date.now()}-${i}`,
@@ -60,7 +61,11 @@ export function DeckCreationForm() {
       }
       applyGeneratedCards(data);
     } catch (err) {
-      setImportError(err instanceof Error ? err.message : "Upload failed. Try a smaller file or different format.");
+      setImportError(
+        err instanceof Error
+          ? err.message
+          : "Upload failed. Try a smaller file or different format."
+      );
     } finally {
       setIsImporting(false);
       e.target.value = "";
@@ -85,7 +90,10 @@ export function DeckCreationForm() {
       }
       // Bullet points: each line = one card (front = line, back = same for memorization)
       if (/^[\-\*•]\s+/.test(line) || /^\d+[\.\)]\s+/.test(line)) {
-        const content = line.replace(/^[\-\*•]\s+/, "").replace(/^\d+[\.\)]\s+/, "").trim();
+        const content = line
+          .replace(/^[\-\*•]\s+/, "")
+          .replace(/^\d+[\.\)]\s+/, "")
+          .trim();
         if (content.length > 10) {
           const short = content.length > 80 ? content.slice(0, 77) + "..." : content;
           cards.push({ front: short, back: content });
@@ -98,7 +106,10 @@ export function DeckCreationForm() {
     if (cards.length > 0) return cards;
 
     // Fallback: split by double newline (paragraphs). Each para = one card.
-    const paras = text.split(/\n\s*\n/).map((p) => p.trim()).filter((p) => p.length > 15);
+    const paras = text
+      .split(/\n\s*\n/)
+      .map((p) => p.trim())
+      .filter((p) => p.length > 15);
     for (const p of paras) {
       const front = p.length > 100 ? p.slice(0, 97) + "..." : p;
       cards.push({ front, back: p });
@@ -116,7 +127,9 @@ export function DeckCreationForm() {
     setImportError(null);
     const cards = parseTextToCards(text);
     if (cards.length === 0) {
-      setImportError("Could not split text into cards. Try adding 'Term: Definition' pairs or bullet points.");
+      setImportError(
+        "Could not split text into cards. Try adding 'Term: Definition' pairs or bullet points."
+      );
       return;
     }
     applyGeneratedCards({ cards });
@@ -155,7 +168,7 @@ export function DeckCreationForm() {
       <div className="space-y-2">
         <label
           htmlFor="title"
-          className="text-sm font-medium text-gray-700 dark:text-gray-300"
+          className="text-sm font-medium text-slate-300"
         >
           Deck title
         </label>
@@ -169,27 +182,31 @@ export function DeckCreationForm() {
       </div>
 
       <div className="space-y-3">
-        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <h3 className="text-sm font-medium text-slate-300">
           Import to generate flashcards
         </h3>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Paste text (instant, no API) or upload a file (uses AI). For text, use &quot;Term: Definition&quot; or bullet points for best results.
+        <p className="text-sm text-slate-400">
+          Paste text (instant, no API) or upload a file (uses AI). For text, use
+          &quot;Term: Definition&quot; or bullet points for best results.
         </p>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="space-y-2 rounded-lg border border-gray-200 p-4 dark:border-gray-800">
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+          <div className="space-y-2 rounded-lg border border-slate-700 p-4">
+            <div className="flex items-center gap-2 text-sm font-medium text-slate-300">
               <Type className="h-4 w-4" />
               Paste text
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              Use &quot;Term: Definition&quot; per line, bullet points, or paragraphs separated by blank lines.
+            <p className="text-xs text-slate-400">
+              Use &quot;Term: Definition&quot; per line, bullet points, or paragraphs
+              separated by blank lines.
             </p>
             <textarea
-              placeholder={'e.g.\nPhotosynthesis: Plants convert light into energy\nMitochondria: The powerhouse of the cell'}
+              placeholder={
+                "e.g.\nPhotosynthesis: Plants convert light into energy\nMitochondria: The powerhouse of the cell"
+              }
               value={importText}
               onChange={(e) => setImportText(e.target.value)}
               rows={5}
-              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 dark:border-gray-700 dark:bg-gray-900 dark:placeholder:text-gray-500"
+              className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20"
             />
             <Button
               type="button"
@@ -201,8 +218,8 @@ export function DeckCreationForm() {
               Generate from text
             </Button>
           </div>
-          <div className="space-y-2 rounded-lg border border-gray-200 p-4 dark:border-gray-800">
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+          <div className="space-y-2 rounded-lg border border-slate-700 p-4">
+            <div className="flex items-center gap-2 text-sm font-medium text-slate-300">
               <FileUp className="h-4 w-4" />
               Upload file
             </div>
@@ -236,18 +253,12 @@ export function DeckCreationForm() {
       <div ref={cardEditorRef}>
         <CardEditor cards={cards} onChange={setCards} />
       </div>
-      {error && (
-        <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-      )}
+      {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
       <div className="flex gap-4">
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Creating…" : "Create deck"}
         </Button>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.push("/study")}
-        >
+        <Button type="button" variant="outline" onClick={() => router.push("/study")}>
           Cancel
         </Button>
       </div>

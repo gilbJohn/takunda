@@ -16,7 +16,12 @@ export interface ProfileEditModalProps {
   user: User;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (data: { name: string; phone?: string; school?: string; major?: string }) => Promise<void>;
+  onSave: (data: {
+    name: string;
+    phone?: string;
+    school?: string;
+    major?: string;
+  }) => Promise<void>;
 }
 
 export function ProfileEditModal({

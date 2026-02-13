@@ -63,9 +63,7 @@ export function GameView({
               key={p.id}
               className={cn(
                 "flex h-10 min-w-[2.5rem] items-center justify-center rounded-full px-3 transition-all duration-500",
-                isEliminated
-                  ? "scale-75 opacity-40"
-                  : "scale-100 opacity-100",
+                isEliminated ? "scale-75 opacity-40" : "scale-100 opacity-100",
                 justEliminated &&
                   "animate-eliminate-pulse ring-2 ring-red-500 ring-offset-2 dark:ring-offset-gray-950"
               )}
@@ -127,11 +125,16 @@ export function GameView({
                 "disabled:cursor-default disabled:pointer-events-none",
                 !showResult &&
                   "border-gray-200 hover:border-amber-400 hover:bg-amber-50 dark:border-gray-700 dark:hover:border-amber-600 dark:hover:bg-amber-950/30",
-                showResult && isCorrect &&
+                showResult &&
+                  isCorrect &&
                   "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 dark:border-emerald-400",
-                showResult && isSelected && !isCorrect &&
+                showResult &&
+                  isSelected &&
+                  !isCorrect &&
                   "border-red-500 bg-red-50 dark:bg-red-950/40 dark:border-red-400",
-                showResult && !isSelected && !isCorrect &&
+                showResult &&
+                  !isSelected &&
+                  !isCorrect &&
                   "border-gray-200 opacity-60 dark:border-gray-700"
               )}
             >
@@ -139,9 +142,15 @@ export function GameView({
               {showResult && (
                 <span className="shrink-0">
                   {isCorrect ? (
-                    <Check className="h-6 w-6 text-emerald-600 dark:text-emerald-400" strokeWidth={3} />
+                    <Check
+                      className="h-6 w-6 text-emerald-600 dark:text-emerald-400"
+                      strokeWidth={3}
+                    />
                   ) : isSelected ? (
-                    <X className="h-6 w-6 text-red-600 dark:text-red-400" strokeWidth={3} />
+                    <X
+                      className="h-6 w-6 text-red-600 dark:text-red-400"
+                      strokeWidth={3}
+                    />
                   ) : null}
                 </span>
               )}
@@ -152,7 +161,10 @@ export function GameView({
 
       {roundEnded && correctAnswer && (
         <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-          Correct: <span className="font-semibold text-emerald-600 dark:text-emerald-400">{correctAnswer}</span>
+          Correct:{" "}
+          <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+            {correctAnswer}
+          </span>
         </p>
       )}
 

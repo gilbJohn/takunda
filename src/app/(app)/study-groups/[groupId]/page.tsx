@@ -144,13 +144,18 @@ export default function StudyGroupDetailPage() {
 
   return (
     <div className="container max-w-2xl space-y-8 p-8">
-      <Link href="/study-groups" className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+      <Link
+        href="/study-groups"
+        className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400"
+      >
         <ArrowLeft className="h-4 w-4" />
         Back to study groups
       </Link>
       <PageHeader
         title={group.name}
-        description={group.class ? `${group.class.code ?? group.class.name}` : "General study group"}
+        description={
+          group.class ? `${group.class.code ?? group.class.name}` : "General study group"
+        }
       />
       <div className="space-y-6 rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-950">
         <div>
@@ -168,7 +173,9 @@ export default function StudyGroupDetailPage() {
                 >
                   <Avatar src={m.avatar} fallback={m.name} className="h-10 w-10" />
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-gray-50">{m.name}</p>
+                    <p className="font-medium text-gray-900 dark:text-gray-50">
+                      {m.name}
+                    </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">{m.email}</p>
                   </div>
                 </div>
@@ -235,11 +242,7 @@ export default function StudyGroupDetailPage() {
                 </div>
                 <div className="flex-1 space-y-2">
                   <div className="flex gap-2">
-                    <Input
-                      readOnly
-                      value={joinUrl}
-                      className="font-mono text-sm"
-                    />
+                    <Input readOnly value={joinUrl} className="font-mono text-sm" />
                     <Button variant="outline" size="sm" onClick={copyJoinLink}>
                       Copy
                     </Button>

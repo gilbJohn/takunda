@@ -36,7 +36,9 @@ export function ExplanationPhase({
         <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
           Pass the computer to...
         </p>
-        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{currentPlayerName}</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+          {currentPlayerName}
+        </h2>
         <p className="text-xs text-gray-500 dark:text-gray-400">{term.category}</p>
         <h3 className="text-2xl font-bold tracking-tight">{term.term}</h3>
       </header>

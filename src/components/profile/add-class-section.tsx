@@ -71,7 +71,7 @@ export function AddClassSection({
   return (
     <div className="space-y-3">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
         <Input
           placeholder="Search classes by name or code..."
           value={searchQuery}
@@ -84,10 +84,11 @@ export function AddClassSection({
           {suggested.slice(0, 5).map((cls) => (
             <div
               key={cls.id}
-              className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 dark:border-gray-800 dark:bg-gray-900"
+              className="flex items-center justify-between rounded-xl border border-slate-700 bg-slate-900 px-3 py-2"
             >
               <span className="text-sm font-medium">
-                {cls.code ? `${cls.code} - ` : ""}{cls.name}
+                {cls.code ? `${cls.code} - ` : ""}
+                {cls.name}
               </span>
               <Button
                 size="sm"
@@ -101,14 +102,10 @@ export function AddClassSection({
           ))}
           {noMatch && (
             <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 dark:border-gray-800 dark:bg-gray-900">
-              <span className="text-sm text-gray-600 dark:text-gray-400">
+              <span className="text-sm text-slate-400">
                 No class found for &quot;{searchQuery}&quot;
               </span>
-              <Button
-                size="sm"
-                onClick={handleCreateAndAdd}
-                disabled={isAdding}
-              >
+              <Button size="sm" onClick={handleCreateAndAdd} disabled={isAdding}>
                 Add &quot;{searchQuery}&quot;
               </Button>
             </div>

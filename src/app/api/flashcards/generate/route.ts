@@ -13,10 +13,8 @@ const ALLOWED_TYPES = [
 
 const EXT_TO_MIME: Record<string, string> = {
   ".pdf": "application/pdf",
-  ".docx":
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  ".pptx":
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ".pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
 };
 
 const FLASHCARD_PROMPT = `You are a study assistant. Analyze this document and generate flashcard pairs for effective studying.
@@ -45,10 +43,7 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function withRetry<T>(
-  fn: () => Promise<T>,
-  maxRetries = 2
-): Promise<T> {
+async function withRetry<T>(fn: () => Promise<T>, maxRetries = 2): Promise<T> {
   let lastErr: unknown;
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
@@ -74,7 +69,9 @@ Example: [{"front":"What is X?","back":"X is..."}]
 Generate between 5 and 30 cards depending on the content length. Keep fronts concise; backs informative.
 Do not include any text outside the JSON array.`;
 
-function parseAndValidateCards(parsed: unknown): { id: string; front: string; back: string }[] {
+function parseAndValidateCards(
+  parsed: unknown
+): { id: string; front: string; back: string }[] {
   if (!Array.isArray(parsed)) {
     return [];
   }
@@ -129,9 +126,7 @@ export async function POST(request: NextRequest) {
       const response = await withRetry(() =>
         ai.models.generateContent({
           model: "gemini-2.0-flash",
-          contents: createUserContent([
-            `${TEXT_PROMPT}\n\n---\n\n${textInput}`,
-          ]),
+          contents: createUserContent([`${TEXT_PROMPT}\n\n---\n\n${textInput}`]),
           config: {
             responseMimeType: "application/json",
             temperature: 0.3,
@@ -199,10 +194,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!responseText || !responseText.trim()) {
-      return NextResponse.json(
-        { error: "Could not extract content." },
-        { status: 422 }
-      );
+      return NextResponse.json({ error: "Could not extract content." }, { status: 422 });
     }
 
     let parsed: unknown;
@@ -229,9 +221,7 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     const status =
-      message.includes("429") || message.includes("RESOURCE_EXHAUSTED")
-        ? 429
-        : 500;
+      message.includes("429") || message.includes("RESOURCE_EXHAUSTED") ? 429 : 500;
     return NextResponse.json(
       {
         error:

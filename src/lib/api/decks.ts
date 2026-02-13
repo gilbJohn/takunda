@@ -11,7 +11,9 @@ async function getDecksMock(): Promise<Deck[]> {
 
 async function getDecksSupabase(): Promise<Deck[]> {
   if (!supabase) return [];
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
   if (!session?.user) return [];
 
   const { data: decks } = await supabase
@@ -98,9 +100,13 @@ async function createDeckMock(deck: Deck): Promise<Deck> {
 
 async function createDeckSupabase(deck: Omit<Deck, "id">): Promise<Deck> {
   if (!supabase) throw new Error("Supabase not configured");
-  let { data: { session } } = await supabase.auth.getSession();
+  let {
+    data: { session },
+  } = await supabase.auth.getSession();
   if (!session?.user) {
-    const { data: { session: refreshed } } = await supabase.auth.refreshSession();
+    const {
+      data: { session: refreshed },
+    } = await supabase.auth.refreshSession();
     session = refreshed;
   }
   if (!session?.user) {
@@ -114,7 +120,8 @@ async function createDeckSupabase(deck: Omit<Deck, "id">): Promise<Deck> {
     .select("id, title, created_at")
     .single();
 
-  if (deckError || !newDeck) throw new Error(deckError?.message ?? "Failed to create deck");
+  if (deckError || !newDeck)
+    throw new Error(deckError?.message ?? "Failed to create deck");
 
   if (deck.cards.length > 0) {
     const cardsToInsert = deck.cards.map((c) => ({
@@ -146,7 +153,9 @@ async function createDeckApi(deck: Omit<Deck, "id">): Promise<Deck> {
 
 async function getExploreDecksSupabase(): Promise<Deck[]> {
   if (!supabase) return [];
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
   if (!session?.user) return [];
 
   const { data: decks } = await supabase
@@ -197,8 +206,16 @@ async function getExploreDecksMock(): Promise<Deck[]> {
       id: "explore-1",
       title: "Data Structures - Linked Lists",
       cards: [
-        { id: "e1", front: "What is a linked list?", back: "A linear data structure where elements are linked via pointers." },
-        { id: "e2", front: "Singly vs doubly linked?", back: "Singly has one pointer (next); doubly has prev and next." },
+        {
+          id: "e1",
+          front: "What is a linked list?",
+          back: "A linear data structure where elements are linked via pointers.",
+        },
+        {
+          id: "e2",
+          front: "Singly vs doubly linked?",
+          back: "Singly has one pointer (next); doubly has prev and next.",
+        },
         { id: "e3", front: "Time complexity of insert at head?", back: "O(1)" },
         { id: "e4", front: "Time complexity of search?", back: "O(n)" },
       ],
@@ -208,10 +225,26 @@ async function getExploreDecksMock(): Promise<Deck[]> {
       id: "explore-2",
       title: "Biology - Genetics Basics",
       cards: [
-        { id: "e5", front: "What is DNA?", back: "Deoxyribonucleic acid; carries genetic instructions." },
-        { id: "e6", front: "What is a gene?", back: "A segment of DNA that codes for a trait." },
-        { id: "e7", front: "What is meiosis?", back: "Cell division that produces gametes with half the chromosomes." },
-        { id: "e8", front: "What is mitosis?", back: "Cell division that produces two identical daughter cells." },
+        {
+          id: "e5",
+          front: "What is DNA?",
+          back: "Deoxyribonucleic acid; carries genetic instructions.",
+        },
+        {
+          id: "e6",
+          front: "What is a gene?",
+          back: "A segment of DNA that codes for a trait.",
+        },
+        {
+          id: "e7",
+          front: "What is meiosis?",
+          back: "Cell division that produces gametes with half the chromosomes.",
+        },
+        {
+          id: "e8",
+          front: "What is mitosis?",
+          back: "Cell division that produces two identical daughter cells.",
+        },
       ],
       creatorName: "Jordan Lee",
     },
@@ -243,15 +276,13 @@ export async function getExploreDecks(): Promise<Deck[]> {
   return getExploreDecksApi();
 }
 
-export async function createDeck(
-  deck: Omit<Deck, "id"> | Deck
-): Promise<Deck> {
+export async function createDeck(deck: Omit<Deck, "id"> | Deck): Promise<Deck> {
   const payload = { title: deck.title, cards: deck.cards };
   if (API_CONFIG.useSupabase) return createDeckSupabase(payload);
   if (API_CONFIG.useMock) {
     const newDeck: Deck = {
       ...deck,
-      id: ("id" in deck && deck.id) ? deck.id : `deck-${Date.now()}`,
+      id: "id" in deck && deck.id ? deck.id : `deck-${Date.now()}`,
     };
     return createDeckMock(newDeck);
   }

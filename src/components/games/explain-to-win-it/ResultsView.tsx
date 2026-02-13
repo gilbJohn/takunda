@@ -29,13 +29,15 @@ export function ResultsView({
 
       <div className="space-y-4">
         <div className="p-4 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-          <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Best explanation by</p>
-          <p className="text-xl font-bold">
-            {winner ? winner.name : "No one"}
+          <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+            Best explanation by
           </p>
+          <p className="text-xl font-bold">{winner ? winner.name : "No one"}</p>
         </div>
         <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-800">
-          <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Winning explanation:</p>
+          <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+            Winning explanation:
+          </p>
           <p className="text-base leading-relaxed">{winningExplanation}</p>
         </div>
       </div>

@@ -66,8 +66,8 @@ export default function LastOneStandingSelectPage() {
       )}
       {decks.length > 0 && eligibleDecks.length < decks.length && (
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          {decks.filter((d) => d.cards.length < MIN_CARDS).length} deck(s) need
-          more cards to play Last One Standing.
+          {decks.filter((d) => d.cards.length < MIN_CARDS).length} deck(s) need more cards
+          to play Last One Standing.
         </p>
       )}
       <Link href="/games">

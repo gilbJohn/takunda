@@ -21,18 +21,20 @@ export function SignupForm() {
   };
 
   return (
-    <div className="space-y-6 rounded-lg border border-gray-200 bg-white p-8 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <div className="space-y-6 rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-lg sm:p-8">
       <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-bold">Create an account</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Get started with Takunda
+        <h1 className="text-2xl font-bold tracking-tight text-slate-100 sm:text-3xl">
+          Create an account
+        </h1>
+        <p className="text-sm text-slate-400">
+          Get started in under a minute
         </p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <label
             htmlFor="name"
-            className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            className="text-sm font-medium text-slate-300"
           >
             Name
           </label>
@@ -48,7 +50,7 @@ export function SignupForm() {
         <div className="space-y-2">
           <label
             htmlFor="email"
-            className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            className="text-sm font-medium text-slate-300"
           >
             Email
           </label>
@@ -64,7 +66,7 @@ export function SignupForm() {
         <div className="space-y-2">
           <label
             htmlFor="password"
-            className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            className="text-sm font-medium text-slate-300"
           >
             Password
           </label>
@@ -81,9 +83,12 @@ export function SignupForm() {
           Sign up
         </Button>
       </form>
-      <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-center text-sm text-slate-400">
         Already have an account?{" "}
-        <Link href="/login" className="font-medium text-gray-900 hover:underline dark:text-gray-50">
+        <Link
+          href="/login"
+          className="font-medium text-emerald-500 hover:text-emerald-400 hover:underline"
+        >
           Log in
         </Link>
       </p>

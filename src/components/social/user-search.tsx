@@ -30,7 +30,7 @@ export function UserSearch({
   return (
     <div className="space-y-4">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
         <Input
           placeholder="Search by name or email..."
           value={searchQuery}
@@ -39,9 +39,7 @@ export function UserSearch({
         />
       </div>
       <div className="flex flex-wrap gap-2">
-        <span className="text-sm text-gray-600 dark:text-gray-400">
-          Filter by class:
-        </span>
+        <span className="text-sm text-slate-400">Filter by class:</span>
         {classes.map((cls) => (
           <button
             key={cls.id}
@@ -49,8 +47,8 @@ export function UserSearch({
             onClick={() => toggleClass(cls.id)}
             className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
               selectedClassIds.includes(cls.id)
-                ? "bg-gray-900 text-white dark:bg-gray-50 dark:text-gray-900"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                ? "bg-emerald-600/15 text-emerald-500"
+                : "bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-100"
             }`}
           >
             {cls.code ?? cls.name}

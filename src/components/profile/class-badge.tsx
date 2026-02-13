@@ -7,14 +7,16 @@ export interface ClassBadgeProps {
 }
 
 export function ClassBadge({ name, code, className }: ClassBadgeProps) {
+  const label = code ? `${code} — ${name}` : name;
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300",
+        "inline-block max-w-[140px] truncate rounded-full bg-emerald-600/15 px-2.5 py-0.5 text-xs font-medium text-emerald-500",
         className
       )}
+      title={label}
     >
-      {code ? `${code} — ${name}` : name}
+      {label}
     </span>
   );
 }

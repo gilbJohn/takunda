@@ -33,17 +33,14 @@ export function useGameSocket(roomId: string) {
     isConnected: false,
   });
 
-  const emit = useCallback(
-    (event: GameEvent) => {
-      // Placeholder: In production, send to server
-      // e.g. socket.emit("game_event", { roomId, ...event });
-      console.log(`[useGameSocket] emit:`, event);
-      if (event.action === "START_GAME") {
-        setState((s) => ({ ...s, phase: "explain" }));
-      }
-    },
-    []
-  );
+  const emit = useCallback((event: GameEvent) => {
+    // Placeholder: In production, send to server
+    // e.g. socket.emit("game_event", { roomId, ...event });
+    console.log(`[useGameSocket] emit:`, event);
+    if (event.action === "START_GAME") {
+      setState((s) => ({ ...s, phase: "explain" }));
+    }
+  }, []);
 
   useEffect(() => {
     // Placeholder: Connect to room

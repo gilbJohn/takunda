@@ -238,14 +238,22 @@ export default function QuizPage() {
               </div>
               <div>
                 <p className="font-bold text-lg">Incorrect</p>
-                <p className="text-sm opacity-90">The correct answer is highlighted below.</p>
+                <p className="text-sm opacity-90">
+                  The correct answer is highlighted below.
+                </p>
               </div>
             </>
           )}
         </div>
       )}
 
-      <Card className={cn(selectedAnswer && gotCorrect && "animate-success-flash ring-2 ring-emerald-500/50")}>
+      <Card
+        className={cn(
+          selectedAnswer &&
+            gotCorrect &&
+            "animate-success-flash ring-2 ring-emerald-500/50"
+        )}
+      >
         <CardHeader>
           <CardTitle className="text-lg">{currentQuestion?.question}</CardTitle>
         </CardHeader>
@@ -264,24 +272,42 @@ export default function QuizPage() {
                 className={cn(
                   "flex w-full min-h-12 items-center justify-between gap-4 rounded-lg border-2 px-4 py-3 text-left transition-all",
                   "disabled:cursor-default disabled:pointer-events-none",
-                  !showResult && "border-gray-200 hover:border-gray-400 hover:bg-gray-50 dark:border-gray-800 dark:hover:border-gray-700 dark:hover:bg-gray-900/50",
-                  showResult && isCorrect && "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 dark:border-emerald-400 animate-correct-glow",
-                  showResult && isSelected && !isCorrect && "border-red-500 bg-red-50 dark:bg-red-950/40 dark:border-red-400 animate-wrong-shake",
-                  showResult && !isSelected && !isCorrect && "border-gray-200 opacity-60 dark:border-gray-800"
+                  !showResult &&
+                    "border-gray-200 hover:border-gray-400 hover:bg-gray-50 dark:border-gray-800 dark:hover:border-gray-700 dark:hover:bg-gray-900/50",
+                  showResult &&
+                    isCorrect &&
+                    "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 dark:border-emerald-400 animate-correct-glow",
+                  showResult &&
+                    isSelected &&
+                    !isCorrect &&
+                    "border-red-500 bg-red-50 dark:bg-red-950/40 dark:border-red-400 animate-wrong-shake",
+                  showResult &&
+                    !isSelected &&
+                    !isCorrect &&
+                    "border-gray-200 opacity-60 dark:border-gray-800"
                 )}
               >
                 <span className="flex-1 font-medium">{choice}</span>
                 {showResult && isSelected && (
                   <span className="shrink-0">
                     {isCorrect ? (
-                      <Check className="h-6 w-6 text-emerald-600 dark:text-emerald-400" strokeWidth={3} />
+                      <Check
+                        className="h-6 w-6 text-emerald-600 dark:text-emerald-400"
+                        strokeWidth={3}
+                      />
                     ) : (
-                      <X className="h-6 w-6 text-red-600 dark:text-red-400" strokeWidth={3} />
+                      <X
+                        className="h-6 w-6 text-red-600 dark:text-red-400"
+                        strokeWidth={3}
+                      />
                     )}
                   </span>
                 )}
                 {showResult && isCorrect && !isSelected && (
-                  <Check className="h-6 w-6 shrink-0 text-emerald-600 dark:text-emerald-400" strokeWidth={3} />
+                  <Check
+                    className="h-6 w-6 shrink-0 text-emerald-600 dark:text-emerald-400"
+                    strokeWidth={3}
+                  />
                 )}
               </button>
             );

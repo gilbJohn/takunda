@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getExploreDecks } from "@/lib/api";
 import { DeckCard } from "@/components/study/deck-card";
 import { PageHeader } from "@/components/shared/page-header";
+import { PageContainer } from "@/components/layout/page-container";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
 import { Compass, BookOpen } from "lucide-react";
@@ -22,7 +23,7 @@ export default function ExploreDecksPage() {
   }, []);
 
   return (
-    <div className="container max-w-4xl space-y-8 p-8">
+    <PageContainer maxWidth="lg">
       <div className="flex items-center justify-between">
         <PageHeader
           title="Explore decks"
@@ -38,7 +39,7 @@ export default function ExploreDecksPage() {
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
-              className="h-32 animate-pulse rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50"
+              className="h-32 animate-pulse rounded-xl border border-slate-700 bg-slate-800/50"
             />
           ))}
         </div>
@@ -60,6 +61,6 @@ export default function ExploreDecksPage() {
           ))}
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }

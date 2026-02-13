@@ -20,7 +20,7 @@ export default function SignupPage() {
     <div className="space-y-8">
       <Link
         href="/"
-        className="inline-block text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+        className="inline-block text-sm font-medium text-slate-400 hover:text-emerald-500"
       >
         ← Back to home
       </Link>

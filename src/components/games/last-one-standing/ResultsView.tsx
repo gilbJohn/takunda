@@ -27,9 +27,7 @@ export function ResultsView({
               <Trophy className="h-10 w-10" />
             </div>
           </div>
-          <p className="text-lg font-medium text-amber-800 dark:text-amber-200">
-            Winner
-          </p>
+          <p className="text-lg font-medium text-amber-800 dark:text-amber-200">Winner</p>
           <p className="text-3xl font-bold text-amber-900 dark:text-amber-100">
             {winner.name}
           </p>

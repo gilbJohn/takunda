@@ -9,10 +9,11 @@ const rawApiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
 const baseUrl = rawApiUrl.trim();
 
 const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").trim();
-const supabaseKey =
-  (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY ??
-    "").trim();
+const supabaseKey = (
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY ??
+  ""
+).trim();
 
 export const API_CONFIG = {
   baseUrl,

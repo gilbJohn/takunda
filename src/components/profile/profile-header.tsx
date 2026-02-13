@@ -14,23 +14,17 @@ export function ProfileHeader({
 }: ProfileHeaderProps) {
   return (
     <div className="flex items-center gap-6">
-      <Avatar
-        src={user.avatar}
-        fallback={user.name}
-        className="h-24 w-24"
-      />
+      <Avatar src={user.avatar} fallback={user.name} className="h-24 w-24" />
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">
+        <h1 className="text-2xl font-bold text-slate-100">
           {user.name}
         </h1>
-        {showEmail && (
-          <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
-        )}
+        {showEmail && <p className="text-slate-400">{user.email}</p>}
         {showPhone && user.phone && (
-          <p className="text-gray-600 dark:text-gray-400">{user.phone}</p>
+          <p className="text-slate-400">{user.phone}</p>
         )}
         {(user.school || user.major) && (
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-slate-400">
             {[user.school, user.major].filter(Boolean).join(" • ")}
           </p>
         )}

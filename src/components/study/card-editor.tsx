@@ -12,10 +12,7 @@ export interface CardEditorProps {
 
 export function CardEditor({ cards, onChange }: CardEditorProps) {
   const addCard = () => {
-    onChange([
-      ...cards,
-      { id: `card-${Date.now()}`, front: "", back: "" },
-    ]);
+    onChange([...cards, { id: `card-${Date.now()}`, front: "", back: "" }]);
   };
 
   const updateCard = (index: number, field: "front" | "back", value: string) => {
@@ -41,12 +38,10 @@ export function CardEditor({ cards, onChange }: CardEditorProps) {
         {cards.map((card, index) => (
           <div
             key={card.id}
-            className="rounded-lg border border-gray-200 p-4 dark:border-gray-800"
+            className="rounded-xl border border-slate-700 p-4"
           >
             <div className="flex justify-between gap-2">
-              <span className="text-sm font-medium text-gray-500">
-                Card {index + 1}
-              </span>
+              <span className="text-sm font-medium text-slate-400">Card {index + 1}</span>
               <Button
                 type="button"
                 variant="ghost"

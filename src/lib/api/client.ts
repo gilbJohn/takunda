@@ -12,10 +12,7 @@ interface RequestConfig extends RequestInit {
  *
  * Automatically prepends base URL and injects auth token from localStorage.
  */
-async function request<T>(
-  endpoint: string,
-  config: RequestConfig = {}
-): Promise<T> {
+async function request<T>(endpoint: string, config: RequestConfig = {}): Promise<T> {
   const { params, headers = {}, ...init } = config;
 
   let url = `${API_CONFIG.baseUrl}${endpoint}`;
@@ -50,13 +47,25 @@ export const apiClient = {
     request<T>(endpoint, { ...config, method: "GET" }),
 
   post: <T>(endpoint: string, body?: unknown, config?: RequestConfig) =>
-    request<T>(endpoint, { ...config, method: "POST", body: body ? JSON.stringify(body) : undefined }),
+    request<T>(endpoint, {
+      ...config,
+      method: "POST",
+      body: body ? JSON.stringify(body) : undefined,
+    }),
 
   put: <T>(endpoint: string, body?: unknown, config?: RequestConfig) =>
-    request<T>(endpoint, { ...config, method: "PUT", body: body ? JSON.stringify(body) : undefined }),
+    request<T>(endpoint, {
+      ...config,
+      method: "PUT",
+      body: body ? JSON.stringify(body) : undefined,
+    }),
 
   patch: <T>(endpoint: string, body?: unknown, config?: RequestConfig) =>
-    request<T>(endpoint, { ...config, method: "PATCH", body: body ? JSON.stringify(body) : undefined }),
+    request<T>(endpoint, {
+      ...config,
+      method: "PATCH",
+      body: body ? JSON.stringify(body) : undefined,
+    }),
 
   delete: <T>(endpoint: string, config?: RequestConfig) =>
     request<T>(endpoint, { ...config, method: "DELETE" }),

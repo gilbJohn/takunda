@@ -6,7 +6,20 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: "1rem",
+        sm: "1.5rem",
+        lg: "2rem",
+        xl: "2.5rem",
+      },
+    },
+    fontFamily: {
+      sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+    },
     extend: {
       keyframes: {
         "success-pop": {

@@ -5,10 +5,15 @@ import { Button } from "@/components/ui/button";
 
 export function MarketingNav() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:border-gray-800 dark:bg-gray-950/95">
-      <div className="container flex h-14 items-center justify-between">
-        <Link href="/" className="flex items-center space-x-2 font-bold text-xl">
-          Takunda
+    <header className="sticky top-0 z-50 w-full border-b border-slate-800 bg-slate-950/95 backdrop-blur-md">
+      <div className="container flex h-16 items-center justify-between">
+        <Link
+          href="/"
+          className="flex items-center space-x-2 text-xl font-bold tracking-tight"
+        >
+          <span className="bg-gradient-to-r from-emerald-500 to-emerald-400 bg-clip-text text-transparent">
+            Takunda
+          </span>
         </Link>
         <nav className="flex items-center gap-4">
           <Link href="/login">
