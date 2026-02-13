@@ -25,3 +25,12 @@ body {
     ),
     rgb(var(--background-start-rgb));
 }
+
+@keyframes eliminate-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+}
+
+.animate-eliminate-pulse {
+  animation: eliminate-pulse 0.6s ease-in-out;
+}

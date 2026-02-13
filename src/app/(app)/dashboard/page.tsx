@@ -21,9 +21,9 @@ export default function DashboardPage() {
         title={`Welcome back, ${user?.name?.split(" ")[0] ?? "there"}!`}
         description="Here are some quick actions to get started."
       />
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Link href="/profile">
-          <Card className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
+      <div className="grid auto-rows-fr gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Link href="/profile" className="flex h-full">
+          <Card className="h-full w-full min-h-[180px] transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
             <CardHeader>
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
                 <User className="h-6 w-6 text-gray-600 dark:text-gray-400" />
@@ -35,8 +35,8 @@ export default function DashboardPage() {
             </CardHeader>
           </Card>
         </Link>
-        <Link href="/friends">
-          <Card className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
+        <Link href="/friends" className="flex h-full">
+          <Card className="h-full w-full min-h-[180px] transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
             <CardHeader>
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
                 <Users className="h-6 w-6 text-gray-600 dark:text-gray-400" />
@@ -48,8 +48,8 @@ export default function DashboardPage() {
             </CardHeader>
           </Card>
         </Link>
-        <Link href="/study-groups">
-          <Card className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
+        <Link href="/study-groups" className="flex h-full">
+          <Card className="h-full w-full min-h-[180px] transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
             <CardHeader>
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
                 <UsersRound className="h-6 w-6 text-gray-600 dark:text-gray-400" />
@@ -61,8 +61,8 @@ export default function DashboardPage() {
             </CardHeader>
           </Card>
         </Link>
-        <Link href="/study">
-          <Card className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
+        <Link href="/study" className="flex h-full">
+          <Card className="h-full w-full min-h-[180px] transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
             <CardHeader>
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
                 <BookOpen className="h-6 w-6 text-gray-600 dark:text-gray-400" />
@@ -74,15 +74,15 @@ export default function DashboardPage() {
             </CardHeader>
           </Card>
         </Link>
-        <Link href="/games">
-          <Card className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
+        <Link href="/games" className="flex h-full">
+          <Card className="h-full w-full min-h-[180px] transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
             <CardHeader>
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
                 <Gamepad2 className="h-6 w-6 text-gray-600 dark:text-gray-400" />
               </div>
               <CardTitle>Games</CardTitle>
               <CardDescription>
-                Play study games (coming soon)
+                Play Jeopardy and other study games
               </CardDescription>
             </CardHeader>
           </Card>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Users, BookOpen, User, LogOut, UsersRound, Gamepad2 } from "lucide-react";
+import { LayoutDashboard, UserCircle, Handshake, GraduationCap, BookOpen, Trophy, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/shared/avatar";
 import { useAuthStore } from "@/stores/auth-store";
@@ -10,11 +10,11 @@ import { cn } from "@/lib/utils/cn";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/profile", label: "Profile", icon: User },
-  { href: "/friends", label: "Friends", icon: Users },
-  { href: "/study-groups", label: "Study Groups", icon: UsersRound },
+  { href: "/profile", label: "Profile", icon: UserCircle },
+  { href: "/friends", label: "Friends", icon: Handshake },
+  { href: "/study-groups", label: "Study Groups", icon: GraduationCap },
   { href: "/study", label: "Study", icon: BookOpen },
-  { href: "/games", label: "Games", icon: Gamepad2 },
+  { href: "/games", label: "Games", icon: Trophy },
 ];
 
 export function Sidebar() {
